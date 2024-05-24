@@ -16,3 +16,9 @@ body {
   margin-inline-end: auto;
   max-width: 1200px;
 }
+
+@layer utilities {
+  .layoutAuth {
+    @apply max-w-[1040px] object-contain bg-[url('assets/bg-auth.png')] bg-no-repeat w-full mx-auto bg-center flex justify-end items-center min-h-[600px];
+  }
+}
