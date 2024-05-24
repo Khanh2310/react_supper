@@ -8,14 +8,14 @@ type Props = {
 };
 export const Input = ({ placeholder, className, type, children }: Props) => {
   return (
-    <div className="relative">
+    <div className="relative ">
       <input
         type={type}
         placeholder={placeholder}
         className={`border w-full p-3 outline-none  ${className}`}
       />
       {children && (
-        <div className="absolute  -translate-y-2/4 top-2/4 right-0 ">
+        <div className="absolute right-6 top-[45%] -translate-y-full select-none">
           {children}
         </div>
       )}
