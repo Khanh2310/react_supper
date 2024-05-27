@@ -1,4 +1,3 @@
-import { Input } from '@/components/atoms/Input';
 import { AuthLayout } from '@/layouts/RegisterLayout/AuthLayout';
 import { facebookLogo, googleLogo } from '@/utils';
 import { Link } from 'react-router-dom';
@@ -8,11 +7,11 @@ export const Register = () => {
     <AuthLayout>
       <div className="bg-white max-w-[450px] w-full  rounded px-[30px] py-[30px]">
         <div className="text-xl mb-[30px]">Đăng ký</div>
-        <form action="">
-          <Input
-            placeholder="Số điện thoại"
-            className="mb-[30px]"
+        <form>
+          <input
             type="text"
+            placeholder="Số điện thoại"
+            className="border w-full p-3 outline-none mb-[30px]"
           />
           <button className="bg-[#ee4d2d] uppercase text-white opacity-70 w-full py-[10px] rounded mb-[30px]">
             Tiếp theo

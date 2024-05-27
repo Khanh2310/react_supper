@@ -1,10 +1,8 @@
-import { ReactNode } from 'react';
-
 type Props = {
   className?: string;
   placeholder: string;
   type: string;
-  children?: ReactNode;
+  children?: React.ReactNode;
 };
 export const Input = ({ placeholder, className, type, children }: Props) => {
   return (
