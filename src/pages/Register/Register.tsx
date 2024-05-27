@@ -1,4 +1,4 @@
-import { AuthLayout } from '@/layouts/RegisterLayout/AuthLayout';
+import { AuthLayout } from '@/layouts/AuthLayout';
 import { getRules } from '@/schema/rules';
 import { facebookLogo, googleLogo } from '@/utils';
 import { SubmitHandler, useForm } from 'react-hook-form';

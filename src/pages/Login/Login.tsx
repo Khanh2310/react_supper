@@ -1,5 +1,5 @@
 import { Icons } from '@/components/atoms/Icons';
-import { AuthLayout } from '@/layouts/RegisterLayout/AuthLayout';
+import { AuthLayout } from '@/layouts/AuthLayout';
 import { facebookLogo, googleLogo } from '@/utils';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
