@@ -32,7 +32,7 @@ export const AuthLayout = ({ children }: Props) => {
           </Link>
         </div>
       </div>
-      <div className="bg-orange ">
+      <div className={`bg-orange ${isMatch ? '' : 'py-[50px]'}`}>
         <div className="layoutAuth">{children}</div>
       </div>
       <Footer />
