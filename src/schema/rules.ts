@@ -4,6 +4,7 @@ type Rules = {
   [key in 'email' | 'password' | 'confirm_password']?: RegisterOptions;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
   email: {
     required: {
