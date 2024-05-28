@@ -1,7 +1,8 @@
 import { Input } from '@/components/atoms/Input';
 import { AuthLayout } from '@/layouts/AuthLayout';
-import { getRules } from '@/schema/rules';
+import { schema } from '@/schema/rules';
 import { facebookLogo, googleLogo } from '@/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
@@ -14,11 +15,10 @@ export const Register = () => {
   const {
     handleSubmit,
     register,
-    getValues,
     formState: { errors },
-  } = useForm<IProps>();
-
-  const rules = getRules(getValues);
+  } = useForm<IProps>({
+    resolver: zodResolver(schema),
+  });
 
   const onSubmit: SubmitHandler<IProps> = (data) => console.log(data);
   return (
@@ -32,7 +32,6 @@ export const Register = () => {
             type="text"
             errorMessage={errors.email?.message}
             placeholder="Email/Số điện thoại/Tên đăng nhập"
-            rules={rules.email}
           />
 
           <Input
@@ -41,7 +40,6 @@ export const Register = () => {
             type="password"
             errorMessage={errors.password?.message}
             placeholder="Password"
-            rules={rules.password}
           />
           <Input
             name="confirm_password"
@@ -49,7 +47,6 @@ export const Register = () => {
             type="password"
             errorMessage={errors.confirm_password?.message}
             placeholder="Confirm Password"
-            rules={rules.confirm_password}
           />
           <button className="bg-[#ee4d2d] uppercase text-white opacity-70 w-full py-[10px] rounded mb-[30px]">
             Tiếp theo

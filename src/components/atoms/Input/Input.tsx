@@ -1,5 +1,5 @@
 import React from 'react';
-import { RegisterOptions, UseFormRegister } from 'react-hook-form';
+import { UseFormRegister } from 'react-hook-form';
 
 type Props = {
   className?: string;
@@ -9,7 +9,6 @@ type Props = {
   name: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   register: UseFormRegister<any>;
-  rules?: RegisterOptions;
   errorMessage?: string;
 };
 export const Input = ({
@@ -18,7 +17,6 @@ export const Input = ({
   type,
   children,
   register,
-  rules,
   errorMessage,
   name,
 }: Props) => {
@@ -27,8 +25,8 @@ export const Input = ({
       <input
         type={type}
         placeholder={placeholder}
-        className={`border w-full p-3 outline-none  ${className}`}
-        {...register(name, rules)}
+        className={`border w-full p-3 outline-none ${className}`}
+        {...register(name)}
       />
       <p className="mt-1 text-red-600 text-sm">{errorMessage}</p>
 
