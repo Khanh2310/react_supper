@@ -1,31 +1,44 @@
 import { Input } from '@/components/atoms/Input';
+import { registerAccount } from '@/hook/useMutateUser';
 import { AuthLayout } from '@/layouts/AuthLayout';
-import { schema } from '@/schema/rules';
+import { Schema, schema } from '@/schema/rules';
 import { facebookLogo, googleLogo } from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
+import { omit } from 'lodash';
+import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
-interface IProps {
-  email: string;
-  password: string;
-  confirm_password: string;
-}
 export const Register = () => {
   const {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm<IProps>({
+  } = useForm<Schema>({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<IProps> = (data) => console.log(data);
+  const registerAccountMutation = useMutation({
+    mutationFn: (body: Omit<Schema, 'confirm_password'>) =>
+      registerAccount(body),
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    const body = omit(data, ['confirm_password']);
+    registerAccountMutation.mutate(body, {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    });
+  });
   return (
     <AuthLayout>
       <div className="bg-white max-w-[450px] w-full rounded px-[30px] py-[30px]">
         <div className="text-xl mb-[30px]">Đăng ký</div>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={onSubmit}>
           <Input
             name="email"
             register={register}
@@ -48,7 +61,10 @@ export const Register = () => {
             errorMessage={errors.confirm_password?.message}
             placeholder="Confirm Password"
           />
-          <button className="bg-[#ee4d2d] uppercase text-white opacity-70 w-full py-[10px] rounded mb-[30px]">
+          <button
+            type="submit"
+            className="bg-[#ee4d2d] uppercase text-white opacity-70 w-full py-[10px] rounded mb-[30px]"
+          >
             Tiếp theo
           </button>
         </form>
