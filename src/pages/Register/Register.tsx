@@ -1,3 +1,4 @@
+import { Input } from '@/components/atoms/Input';
 import { AuthLayout } from '@/layouts/AuthLayout';
 import { getRules } from '@/schema/rules';
 import { facebookLogo, googleLogo } from '@/utils';
@@ -25,37 +26,31 @@ export const Register = () => {
       <div className="bg-white max-w-[450px] w-full rounded px-[30px] py-[30px]">
         <div className="text-xl mb-[30px]">Đăng ký</div>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-[30px]">
-            <input
-              type="text"
-              placeholder="Email/Số điện thoại/Tên đăng nhập"
-              className="border w-full p-3 outline-none"
-              {...register('email', { ...rules.email })}
-            />
-            <p className="mt-1 text-red-600 text-sm">{errors.email?.message}</p>
-          </div>
-          <div className="mb-[30px]">
-            <input
-              type="password"
-              placeholder="Password"
-              className="border w-full p-3 outline-none "
-              {...register('password', { ...rules.password })}
-            />
-            <p className="mt-1 text-red-600 text-sm">
-              {errors.password?.message}
-            </p>
-          </div>
-          <div className="mb-[30px]">
-            <input
-              type="password"
-              placeholder="Confirm password"
-              className="border w-full p-3 outline-none"
-              {...register('confirm_password', { ...rules.confirm_password })}
-            />
-            <p className="mt-1 text-red-600 text-sm">
-              {errors.confirm_password?.message}
-            </p>
-          </div>
+          <Input
+            name="email"
+            register={register}
+            type="text"
+            errorMessage={errors.email?.message}
+            placeholder="Email/Số điện thoại/Tên đăng nhập"
+            rules={rules.email}
+          />
+
+          <Input
+            name="password"
+            register={register}
+            type="password"
+            errorMessage={errors.password?.message}
+            placeholder="Password"
+            rules={rules.password}
+          />
+          <Input
+            name="confirm_password"
+            register={register}
+            type="password"
+            errorMessage={errors.confirm_password?.message}
+            placeholder="Confirm Password"
+            rules={rules.confirm_password}
+          />
           <button className="bg-[#ee4d2d] uppercase text-white opacity-70 w-full py-[10px] rounded mb-[30px]">
             Tiếp theo
           </button>
