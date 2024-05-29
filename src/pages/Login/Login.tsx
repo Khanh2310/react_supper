@@ -1,14 +1,16 @@
 import { Icons } from '@/components/atoms/Icons';
 import { Input } from '@/components/atoms/Input';
+import { login } from '@/hook/useMutateUser';
 import { AuthLayout } from '@/layouts/AuthLayout';
+import { Schema, schema } from '@/schema/rules';
+import { ResponseApi } from '@/types';
+import { isAxiosUnprocessableEntityError } from '@/types/auth/type';
 import { facebookLogo, googleLogo } from '@/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-interface IFormInput {
-  email: string;
-  password: string;
-}
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -19,16 +21,42 @@ export const Login = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
-  } = useForm<IFormInput>();
+  } = useForm<Schema>({
+    resolver: zodResolver(schema),
+  });
 
-  const onSubmit = (data: IFormInput) => console.log(data);
+  const loginAccountMutation = useMutation({
+    mutationFn: (body: Omit<Schema, 'confirm_password'>) => login(body),
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    loginAccountMutation.mutate(data, {
+      onSuccess: () => {
+        console.log(data);
+      },
+      onError: (error) => {
+        if (isAxiosUnprocessableEntityError<ResponseApi<Schema>>(error)) {
+          const formError = error.response?.data.data;
+          if (formError) {
+            Object.keys(formError).forEach((key) => {
+              setError(key as keyof Schema, {
+                message: formError[key as keyof Schema],
+                type: 'Server',
+              });
+            });
+          }
+        }
+      },
+    });
+  });
 
   return (
     <AuthLayout>
       <div className="bg-white max-w-[450px] w-full rounded px-[30px] py-[30px]">
         <div className="text-xl mb-[30px]">Đăng Nhập</div>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={onSubmit}>
           <Input
             name="email"
             register={register}
@@ -39,7 +67,7 @@ export const Login = () => {
 
           <Input
             name="password"
-            type="password"
+            type={`${showPassword ? 'text' : 'password'}`}
             register={register}
             errorMessage={errors.password?.message}
             placeholder="Password"
