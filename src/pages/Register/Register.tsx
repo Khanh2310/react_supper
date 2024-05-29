@@ -2,6 +2,8 @@ import { Input } from '@/components/atoms/Input';
 import { registerAccount } from '@/hook/useMutateUser';
 import { AuthLayout } from '@/layouts/AuthLayout';
 import { Schema, schema } from '@/schema/rules';
+import { ResponseApi } from '@/types';
+import { isAxiosUnprocessableEntityError } from '@/types/auth/type';
 import { facebookLogo, googleLogo } from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -13,6 +15,7 @@ export const Register = () => {
   const {
     handleSubmit,
     register,
+    setError,
     formState: { errors },
   } = useForm<Schema>({
     resolver: zodResolver(schema),
@@ -30,7 +33,25 @@ export const Register = () => {
         console.log(data);
       },
       onError: (error) => {
-        console.log(error);
+        if (
+          isAxiosUnprocessableEntityError<
+            ResponseApi<Omit<Schema, 'confirm_password'>>
+          >(error)
+        ) {
+          const formError = error.response?.data.data;
+          if (formError?.email) {
+            setError('email', {
+              message: formError.email,
+              type: 'Server',
+            });
+          }
+          if (formError?.password) {
+            setError('password', {
+              message: formError.password,
+              type: 'Server',
+            });
+          }
+        }
       },
     });
   });
