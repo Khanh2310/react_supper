@@ -1,7 +1,10 @@
 import { Input } from '@/components/atoms/Input';
 import { registerAccount } from '@/hook/useMutateUser';
 import { AuthLayout } from '@/layouts/AuthLayout';
-import { Schema, schema } from '@/schema/rules';
+import {
+  RegistrationInput,
+  RegistrationInputSchema,
+} from '@/schema/registration/type';
 import { ResponseApi } from '@/types';
 import { isAxiosUnprocessableEntityError } from '@/types/auth/type';
 import { facebookLogo, googleLogo } from '@/utils';
@@ -17,12 +20,12 @@ export const Register = () => {
     register,
     setError,
     formState: { errors },
-  } = useForm<Schema>({
-    resolver: zodResolver(schema),
+  } = useForm<RegistrationInput>({
+    resolver: zodResolver(RegistrationInputSchema),
   });
 
   const registerAccountMutation = useMutation({
-    mutationFn: (body: Omit<Schema, 'confirm_password'>) =>
+    mutationFn: (body: Omit<RegistrationInput, 'confirm_password'>) =>
       registerAccount(body),
   });
 
@@ -35,7 +38,7 @@ export const Register = () => {
       onError: (error) => {
         if (
           isAxiosUnprocessableEntityError<
-            ResponseApi<Omit<Schema, 'confirm_password'>>
+            ResponseApi<Omit<RegistrationInput, 'confirm_password'>>
           >(error)
         ) {
           const formError = error.response?.data.data;

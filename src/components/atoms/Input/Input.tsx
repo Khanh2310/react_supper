@@ -21,7 +21,7 @@ export const Input = ({
   name,
 }: Props) => {
   return (
-    <div className={`${children ? 'relative' : ' mb-[30px]'}`}>
+    <div className={`${children ? 'relative' : 'mb-[30px]'}`}>
       <input
         type={type}
         placeholder={placeholder}

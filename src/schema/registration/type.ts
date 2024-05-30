@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const schema = z
+export const RegistrationInputSchema = z
   .object({
     email: z
       .string()
@@ -14,4 +14,4 @@ export const schema = z
     path: ['confirm_password'],
   });
 
-export type Schema = z.infer<typeof schema>;
+export type RegistrationInput = z.infer<typeof RegistrationInputSchema>;

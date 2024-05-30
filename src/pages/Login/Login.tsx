@@ -2,7 +2,7 @@ import { Icons } from '@/components/atoms/Icons';
 import { Input } from '@/components/atoms/Input';
 import { login } from '@/hook/useMutateUser';
 import { AuthLayout } from '@/layouts/AuthLayout';
-import { Schema, schema } from '@/schema/rules';
+import { LoginInput, LoginInputSchema } from '@/schema/login/type';
 import { ResponseApi } from '@/types';
 import { isAxiosUnprocessableEntityError } from '@/types/auth/type';
 import { facebookLogo, googleLogo } from '@/utils';
@@ -23,26 +23,27 @@ export const Login = () => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<Schema>({
-    resolver: zodResolver(schema),
+  } = useForm<LoginInput>({
+    resolver: zodResolver(LoginInputSchema),
   });
 
   const loginAccountMutation = useMutation({
-    mutationFn: (body: Omit<Schema, 'confirm_password'>) => login(body),
+    mutationFn: (body: LoginInput) => login(body),
   });
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = (data: LoginInput) => {
+    console.log('test');
     loginAccountMutation.mutate(data, {
       onSuccess: () => {
         console.log(data);
       },
       onError: (error) => {
-        if (isAxiosUnprocessableEntityError<ResponseApi<Schema>>(error)) {
+        if (isAxiosUnprocessableEntityError<ResponseApi<LoginInput>>(error)) {
           const formError = error.response?.data.data;
           if (formError) {
             Object.keys(formError).forEach((key) => {
-              setError(key as keyof Schema, {
-                message: formError[key as keyof Schema],
+              setError(key as keyof LoginInput, {
+                message: formError[key as keyof LoginInput],
                 type: 'Server',
               });
             });
@@ -50,13 +51,13 @@ export const Login = () => {
         }
       },
     });
-  });
+  };
 
   return (
     <AuthLayout>
       <div className="bg-white max-w-[450px] w-full rounded px-[30px] py-[30px]">
         <div className="text-xl mb-[30px]">Đăng Nhập</div>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Input
             name="email"
             register={register}
