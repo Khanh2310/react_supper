@@ -17,6 +17,10 @@ body {
   max-width: 1200px;
 }
 
+.header_backgroud {
+  background: linear-gradient(-180deg, #f53d2d, #f63);
+}
+
 @layer utilities {
   .layoutAuth {
     @apply max-w-[1040px] object-contain bg-[url('assets/bg-auth.png')] bg-no-repeat w-full mx-auto bg-center flex justify-end items-center min-h-[600px];
