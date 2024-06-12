@@ -25,10 +25,10 @@ export const RouterConfig = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<ProtectedRoute />}>
-          <Route element={<BasicLayout />} />
-          <Route index element={<ProductList />} />
+          <Route element={<BasicLayout />}>
+            <Route index element={<ProductList />} />
+          </Route>
         </Route>
-
         <Route path="/" element={<RejectedRoute />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
