@@ -2,12 +2,13 @@ export const setToLocalStorage = (key: string, value: string) => {
   localStorage.setItem(key, value);
 };
 
-export const setUserToLocalStorage = (user: string) => {
-  setToLocalStorage('user', user);
+export const setUserToLocalStorage = (access_token: string) => {
+  setToLocalStorage('access_token', access_token);
 };
 
 export const removeUserFromLocalStorage = () => {
-  localStorage.removeItem('user');
+  localStorage.removeItem('access_token');
 };
 
-export const getUserFromLocalStorage = () => localStorage.getItem('user') || '';
+export const getUserFromLocalStorage = () =>
+  localStorage.getItem('access_token') || '';
