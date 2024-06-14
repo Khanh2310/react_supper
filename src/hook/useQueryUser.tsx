@@ -1,5 +1,13 @@
+export const setToLocalStorage = (key: string, value: string) => {
+  try {
+    localStorage.setItem(key, value);
+  } catch (error) {
+    console.log('Storage is not available');
+  }
+};
+
 export const setUserToLocalStorage = (access_token: string) => {
-  localStorage.setItem('access_token', access_token);
+  setToLocalStorage('access_token', access_token);
 };
 
 export const removeUserFromLocalStorage = () => {

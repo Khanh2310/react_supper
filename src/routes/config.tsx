@@ -1,6 +1,7 @@
 import { BasicLayout } from '@/layouts/BasicLayout';
 import { Login } from '@/pages/Login';
 import { ProductList } from '@/pages/ProductList';
+import { Profile } from '@/pages/Profile';
 import { Register } from '@/pages/Register';
 import { AppContext } from '@/states/statusState.context';
 import { useContext } from 'react';
@@ -29,12 +30,13 @@ export const RouterConfig = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<ProtectedRoute />}>
-          <Route element={<BasicLayout />}>
-            <Route index element={<ProductList />} />
-          </Route>
+        <Route element={<BasicLayout />}>
+          <Route index element={<ProductList />} />
         </Route>
-        <Route path="/" element={<RejectedRoute />}>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<Profile />} />
+        </Route>
+        <Route element={<RejectedRoute />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
         </Route>

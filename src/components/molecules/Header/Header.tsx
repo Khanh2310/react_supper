@@ -1,10 +1,14 @@
 import { Link } from 'react-router-dom';
 import { useFloating, arrow } from '@floating-ui/react';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { logout } from '@/hook/useMutateUser';
+import { useMutation } from '@tanstack/react-query';
+import { AppContext } from '@/states/statusState.context';
 export const Header = () => {
   const [open, setOpen] = useState(false);
   const arrowRef = useRef<HTMLDivElement>(null);
+  const { setIsAuthenticated, isAuthenticated } = useContext(AppContext);
   const {
     strategy,
     middlewareData,
@@ -27,6 +31,18 @@ export const Header = () => {
   const hidePopover = () => {
     setOpen(false);
   };
+
+  const logoutMutation = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      setIsAuthenticated(false);
+    },
+  });
+
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
+
   return (
     <header className="header_backgroud pb-5 pt-2">
       <div className="screen-max-width">
@@ -73,44 +89,77 @@ export const Header = () => {
                 className="w-full h-full object-cover rounded-full"
               />
             </div>
-            <div
-              className="text-white text-sm relative"
-              ref={reference}
-              onMouseEnter={showPopover}
-              onMouseLeave={hidePopover}
-            >
-              DEV Community
-              <div>
-                {open && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.2 }}
-                    ref={floating}
-                    style={{
-                      position: strategy,
-                      width: 'max-content',
-                      top: 30,
-                    }}
-                  >
-                    <div className="bg-white shadow-md rounded-sm border relative md:w-[170px] md:right-[40%]">
-                      <span
-                        ref={arrowRef}
-                        className="border-x-transparent  border-t-transparent border-b-white border-[10px] -translate-y-full z-[1] top-0 right-8 "
-                        style={{
-                          position: 'absolute',
-                          right: middlewareData.arrow?.y,
-                          left: middlewareData.arrow?.x,
-                        }}
-                      />
-                      <div className="hover:text-orange py-2 text-gray-700 text-center text-sm">
-                        Đăng xuất
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
+            {!isAuthenticated ? (
+              <div className="flex items-center">
+                <Link
+                  to="/register"
+                  className="mx-3 capitalize text-white hover:text-white,70 "
+                >
+                  Đăng ký
+                </Link>
+                <div className="border-r-[1px] border-r-white/40 "></div>
+                <Link
+                  to="/login"
+                  className="mx-3 capitalize  text-white hover:text-white,70 "
+                >
+                  Đăng nhập
+                </Link>
               </div>
-            </div>
+            ) : (
+              <div
+                className="text-white text-sm relative"
+                ref={reference}
+                onMouseEnter={showPopover}
+                onMouseLeave={hidePopover}
+              >
+                DEV Community
+                <div>
+                  {open && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.2 }}
+                      ref={floating}
+                      style={{
+                        position: strategy,
+                        width: 'max-content',
+                        top: 30,
+                      }}
+                    >
+                      <div className="bg-white shadow-md rounded-sm border relative md:w-[170px] md:right-[40%]  pl-5 py-2">
+                        <span
+                          ref={arrowRef}
+                          className="border-x-transparent  border-t-transparent border-b-white border-[10px] -translate-y-full z-[1] top-0 right-8 "
+                          style={{
+                            position: 'absolute',
+                            right: middlewareData.arrow?.y,
+                            left: middlewareData.arrow?.x,
+                          }}
+                        />
+                        <Link
+                          to="/profile"
+                          className="hover:text-orange py-2  text-gray-700  text-sm block"
+                        >
+                          Tài khoản của tôi
+                        </Link>
+                        <Link
+                          to="/"
+                          className="hover:text-orange py-2 text-gray-700  text-sm block"
+                        >
+                          Đơn hàng
+                        </Link>
+                        <div
+                          className="hover:text-orange py-2 text-gray-700  text-sm"
+                          onClick={handleLogout}
+                        >
+                          Đăng xuất
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
