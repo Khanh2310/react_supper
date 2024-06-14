@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 export const Header = () => {
   const [open, setOpen] = useState(false);
-  const arrowRef = useRef(null);
+  const arrowRef = useRef<HTMLDivElement>(null);
   const {
     strategy,
     middlewareData,
