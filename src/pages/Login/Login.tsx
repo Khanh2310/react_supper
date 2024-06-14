@@ -3,12 +3,13 @@ import { Input } from '@/components/atoms/Input';
 import { login } from '@/hook/useMutateUser';
 import { AuthLayout } from '@/layouts/AuthLayout';
 import { LoginInput, LoginInputSchema } from '@/schema/login/type';
+import { AppContext } from '@/states/statusState.context';
 import { ResponseApi } from '@/types';
 import { isAxiosUnprocessableEntityError } from '@/types/auth/type';
 import { facebookLogo, googleLogo } from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -18,7 +19,7 @@ export const Login = () => {
     setShowPassword(!showPassword);
   };
   const navigate = useNavigate();
-
+  const { setIsAuthenticated } = useContext(AppContext);
   const {
     register,
     handleSubmit,
@@ -35,6 +36,7 @@ export const Login = () => {
   const onSubmit = (data: LoginInput) => {
     loginAccountMutation.mutate(data, {
       onSuccess: () => {
+        setIsAuthenticated(true);
         navigate('/');
       },
       onError: (error) => {

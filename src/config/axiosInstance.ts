@@ -16,12 +16,12 @@ export const axiosInstance = axios.create({
 let accessToken: string;
 
 accessToken = getUserFromLocalStorage();
-axios.interceptors.response.use(
+
+axiosInstance.interceptors.response.use(
   (response) => {
-    console.log(response.data.data.access_token);
     const { url } = response.config;
     if (url === '/login' || url === '/register') {
-      accessToken = response.data.data.access_token;
+      accessToken = response.data.data?.access_token;
       setUserToLocalStorage(accessToken);
     } else if (url === '/logout') {
       accessToken = '';
@@ -40,7 +40,7 @@ axios.interceptors.response.use(
   }
 );
 
-axios.interceptors.request.use(
+axiosInstance.interceptors.request.use(
   (config) => {
     if (accessToken && config.headers) {
       config.headers.authorization = accessToken;
