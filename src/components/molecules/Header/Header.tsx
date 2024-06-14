@@ -93,14 +93,14 @@ export const Header = () => {
               <div className="flex items-center">
                 <Link
                   to="/register"
-                  className="mx-3 capitalize text-white hover:text-white,70 "
+                  className="mx-2 capitalize text-white text-sm hover:text-white,70 "
                 >
                   Đăng ký
                 </Link>
-                <div className="border-r-[1px] border-r-white/40 "></div>
+                <div className="border-r-[1px] border-r-white/40 h-[15px]" />
                 <Link
                   to="/login"
-                  className="mx-3 capitalize  text-white hover:text-white,70 "
+                  className="mx-2 capitalize  text-white text-sm hover:text-white,70 "
                 >
                   Đăng nhập
                 </Link>
