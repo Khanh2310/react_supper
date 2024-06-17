@@ -6,14 +6,16 @@ import {
   RegistrationInput,
   RegistrationInputSchema,
 } from '@/schema/registration/type';
+import { AppContext } from '@/states/statusState.context';
 import { ResponseApi } from '@/types';
 import { isAxiosUnprocessableEntityError } from '@/types/auth/type';
 import { facebookLogo, googleLogo } from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { omit } from 'lodash';
+import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const Register = () => {
   const {
@@ -25,16 +27,22 @@ export const Register = () => {
     resolver: zodResolver(RegistrationInputSchema),
   });
 
+  const navigate = useNavigate();
+
   const registerAccountMutation = useMutation({
     mutationFn: (body: Omit<RegistrationInput, 'confirm_password'>) =>
       registerAccount(body),
   });
 
+  const { setIsAuthenticated, setProfile } = useContext(AppContext);
+
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ['confirm_password']);
     registerAccountMutation.mutate(body, {
       onSuccess: (data) => {
-        console.log(data);
+        setIsAuthenticated(true);
+        setProfile(data.data.data?.user);
+        navigate('/');
       },
       onError: (error) => {
         if (
