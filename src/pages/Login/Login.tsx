@@ -1,3 +1,4 @@
+import { Button } from '@/components/atoms/Button';
 import { Icons } from '@/components/atoms/Icons';
 import { Input } from '@/components/atoms/Input';
 import { login } from '@/hook/useMutateUser';
@@ -19,7 +20,7 @@ export const Login = () => {
     setShowPassword(!showPassword);
   };
   const navigate = useNavigate();
-  const { setIsAuthenticated } = useContext(AppContext);
+  const { setIsAuthenticated, setProfile } = useContext(AppContext);
   const {
     register,
     handleSubmit,
@@ -35,8 +36,10 @@ export const Login = () => {
 
   const onSubmit = (data: LoginInput) => {
     loginAccountMutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        console.log(data.data.data?.user);
         setIsAuthenticated(true);
+        setProfile(data.data.data?.user);
         navigate('/');
       },
       onError: (error) => {
@@ -83,9 +86,13 @@ export const Login = () => {
             />
           </Input>
 
-          <button className="bg-[#ee4d2d] uppercase text-white opacity-70 w-full py-[10px] rounded mb-[10px] outline-none">
+          <Button
+            isLoading={loginAccountMutation.isPending}
+            disabled={loginAccountMutation.isPending}
+            className="bg-[#ee4d2d] uppercase text-white opacity-70 w-full py-[10px] rounded mb-[10px] outline-none flex items-center justify-center"
+          >
             Đăng nhập
-          </button>
+          </Button>
         </form>
         <div className="flex items-center justify-between mb-[10px]">
           <Link to={'/forget-password'} className="text-sm text-[#0055AA]">

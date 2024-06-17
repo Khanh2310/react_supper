@@ -1,3 +1,4 @@
+import { Button } from '@/components/atoms/Button';
 import { Input } from '@/components/atoms/Input';
 import { registerAccount } from '@/hook/useMutateUser';
 import { AuthLayout } from '@/layouts/AuthLayout';
@@ -85,12 +86,14 @@ export const Register = () => {
             errorMessage={errors.confirm_password?.message}
             placeholder="Confirm Password"
           />
-          <button
+          <Button
+            isLoading={registerAccountMutation.isPending}
+            disabled={registerAccountMutation.isPending}
             type="submit"
-            className="bg-[#ee4d2d] uppercase text-white opacity-70 w-full py-[10px] rounded mb-[30px]"
+            className="bg-[#ee4d2d] uppercase text-white opacity-70 w-full py-[10px] rounded mb-[30px] flex items-center justify-center"
           >
             Tiếp theo
-          </button>
+          </Button>
         </form>
         <div className="flex items-center mb-[14px]">
           <div className="bg-[#dbdbdb] w-full h-[1px]" />

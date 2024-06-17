@@ -1,6 +1,7 @@
 import {
   getUserFromLocalStorage,
   removeUserFromLocalStorage,
+  setProfile,
   setUserToLocalStorage,
 } from '@/hook/useQueryUser';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
@@ -20,9 +21,11 @@ accessToken = getUserFromLocalStorage();
 axiosInstance.interceptors.response.use(
   (response) => {
     const { url } = response.config;
+    const data = response.data;
     if (url === '/login' || url === '/register') {
-      accessToken = response.data.data?.access_token;
+      accessToken = data.data?.access_token;
       setUserToLocalStorage(accessToken);
+      setProfile(data.data.user);
     } else if (url === '/logout') {
       accessToken = '';
       removeUserFromLocalStorage();

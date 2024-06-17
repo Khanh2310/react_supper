@@ -8,7 +8,8 @@ import { AppContext } from '@/states/statusState.context';
 export const Header = () => {
   const [open, setOpen] = useState(false);
   const arrowRef = useRef<HTMLDivElement>(null);
-  const { setIsAuthenticated, isAuthenticated } = useContext(AppContext);
+  const { setIsAuthenticated, isAuthenticated, setProfile, profile } =
+    useContext(AppContext);
   const {
     strategy,
     middlewareData,
@@ -36,6 +37,7 @@ export const Header = () => {
     mutationFn: logout,
     onSuccess: () => {
       setIsAuthenticated(false);
+      setProfile(null);
     },
   });
 
@@ -112,7 +114,7 @@ export const Header = () => {
                 onMouseEnter={showPopover}
                 onMouseLeave={hidePopover}
               >
-                DEV Community
+                {profile?.email}
                 <div>
                   {open && (
                     <motion.div
@@ -126,10 +128,10 @@ export const Header = () => {
                         top: 30,
                       }}
                     >
-                      <div className="bg-white shadow-md rounded-sm border relative md:w-[170px] md:right-[40%]  pl-5 py-2">
+                      <div className="bg-white shadow-md rounded-sm border relative md:w-[170px] md:right-[40%]  pl-5 py-2 modal">
                         <span
                           ref={arrowRef}
-                          className="border-x-transparent  border-t-transparent border-b-white border-[10px] -translate-y-full z-[1] top-0 right-8 "
+                          className=" border-x-transparent  border-t-transparent border-b-white border-[10px] -translate-y-full z-[1] top-0 right-8 "
                           style={{
                             position: 'absolute',
                             right: middlewareData.arrow?.y,
