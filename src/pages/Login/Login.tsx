@@ -37,7 +37,6 @@ export const Login = () => {
   const onSubmit = (data: LoginInput) => {
     loginAccountMutation.mutate(data, {
       onSuccess: (data) => {
-        console.log(data.data.data?.user);
         setIsAuthenticated(true);
         setProfile(data.data.data?.user);
         navigate('/');
@@ -89,16 +88,17 @@ export const Login = () => {
           <Button
             isLoading={loginAccountMutation.isPending}
             disabled={loginAccountMutation.isPending}
-            className="bg-[#ee4d2d] uppercase text-white opacity-70 w-full py-[10px] rounded mb-[10px] outline-none flex items-center justify-center"
+            className="bg-[#ee4d2d] uppercase text-white opacity-70 w-full py-[10px] rounded mb-[10px] outline-none flex items-center justify-center text-center"
+            type="submit"
           >
             Đăng nhập
           </Button>
         </form>
         <div className="flex items-center justify-between mb-[10px]">
-          <Link to={'/forget-password'} className="text-sm text-[#0055AA]">
+          <Link to="/forget-password" className="text-sm text-[#0055AA]">
             Quên mật khẩu
           </Link>
-          <Link to={'/SMS'} className="text-sm text-[#0055AA]">
+          <Link to="/SMS" className="text-sm text-[#0055AA]">
             Đăng nhập với SMS
           </Link>
         </div>
@@ -128,7 +128,7 @@ export const Login = () => {
 
         <div className="text-center text-[#00000042]">
           Bạn mới biết đến Shopee?{' '}
-          <Link to={'/register'} className="text-orange">
+          <Link to="/register" className="text-orange">
             Đăng ký
           </Link>
         </div>

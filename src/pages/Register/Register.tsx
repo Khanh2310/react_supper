@@ -98,7 +98,7 @@ export const Register = () => {
             isLoading={registerAccountMutation.isPending}
             disabled={registerAccountMutation.isPending}
             type="submit"
-            className="bg-[#ee4d2d] uppercase text-white opacity-70 w-full py-[10px] rounded mb-[30px] flex items-center justify-center"
+            className="bg-[#ee4d2d] uppercase text-white opacity-70 w-full py-[10px] rounded mb-[30px] flex items-center justify-center text-center"
           >
             Tiếp theo
           </Button>
