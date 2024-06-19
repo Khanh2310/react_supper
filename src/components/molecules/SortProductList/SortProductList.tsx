@@ -2,19 +2,19 @@ export const SortProductList = () => {
   return (
     <div className="bg-gray-300/40 py-4 px-7 flex justify-between items-center">
       <div className="flex items-center flex-wrap justify-between gap-2">
-        <div className="flex items-center flex-wrap gap-2">
-          <div className="t">Sắp xếp theo</div>
-          <button className="h-8 px-4 capitalize rounded-sm bg-orange text-white text-sm hover:bg-orange/80 text-center ">
+        <div className="flex items-center flex-wrap gap-[10px]">
+          <div>Sắp xếp theo</div>
+          <button className="h-8 px-4 capitalize rounded-sm bg-orange text-white text-sm hover:bg-orange/80 text-center">
             Phổ biến
           </button>
-          <button className="h-8 px-4 capitalize bg-white rounded-sm text-gray-700 hover:text-white text-sm hover:bg-orange text-center ">
+          <button className="h-8 px-4 capitalize bg-white rounded-sm text-gray-700 hover:text-white text-sm hover:bg-orange text-center">
             Mới nhất
           </button>
-          <button className="h-8 px-4 capitalize bg-white rounded-sm  text-gray-700 hover:text-white text-sm hover:bg-orange text-center ">
+          <button className="h-8 px-4 capitalize bg-white rounded-sm text-gray-700 hover:text-white text-sm hover:bg-orange text-center">
             Bán chạy
           </button>
           <div className="relative group">
-            <div className="flex items-center justify-between  bg-white px-4 h-8 min-w-[205px] cursor-pointer rounded-sm hover:bg-gray-50/100">
+            <div className="flex items-center justify-between bg-white px-4 h-8 min-w-[205px] cursor-pointer rounded-sm hover:bg-gray-50/100">
               <a href="/" className="text-sm font-medium text-gray-700">
                 Giá
               </a>
@@ -51,12 +51,12 @@ export const SortProductList = () => {
         </div>
       </div>
       <div className="flex items-center">
-        <div className="">
+        <div>
           <span className="text-orange">1</span>
           <span className="">/9</span>
         </div>
         <div className="ml-5">
-          <button className="px-3 h-8 rounded-tl-sm bg-white/60 hover:bg-slate-100 cursor-not-allowed">
+          <button className="px-3 h-8 rounded-tl-sm bg-white/60 hover:bg-slate-100 cursor-not-allowed shadow">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -72,7 +72,7 @@ export const SortProductList = () => {
               />
             </svg>
           </button>
-          <button className="px-3 h-8 rounded-tl-sm bg-slate-400">
+          <button className="px-3 h-8 rounded-tl-sm bg-transparent shadow">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

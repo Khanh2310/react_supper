@@ -24,7 +24,7 @@ export const Aside = () => {
       </Link>
       <div className="bg-gray-300 h-[1px] my-4" />
       <ul>
-        <li className="py-2 pl-2 ">
+        <li className="py-2 pl-2">
           <Link
             to="/"
             className="relative px-2 text-orange font-semibold text-sm"
@@ -72,7 +72,7 @@ export const Aside = () => {
       </Link>
       <div className="bg-gray-300 h-[1px] my-4" />
       <div className="my-5">
-        <div className="Khoản giá" />
+        <div className="Khoảng giá" />
         <form>
           <div className="flex items-center justify-center">
             <input

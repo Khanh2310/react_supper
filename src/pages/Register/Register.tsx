@@ -133,7 +133,7 @@ export const Register = () => {
         </div>
         <div className="text-center text-[#00000042]">
           Bạn đã có tài khoản?{' '}
-          <Link to={'/login'} className="text-orange">
+          <Link to="/login" className="text-orange">
             Đăng nhập
           </Link>
         </div>
