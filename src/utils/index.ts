@@ -8,10 +8,7 @@ export const iconStart = star;
 export const iconStartDefault = starDefault;
 
 export const formatCurrency = (currency: number) => {
-  return new Intl.NumberFormat('de-DE', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(currency);
+  return new Intl.NumberFormat('de-DE').format(currency);
 };
 
 export const formatNumberToSocialStyle = (value: number) => {
@@ -20,5 +17,6 @@ export const formatNumberToSocialStyle = (value: number) => {
     maximumFractionDigits: 1,
   })
     .format(value)
-    .replace('.', ',');
+    .replace('.', ',')
+    .toLowerCase();
 };
