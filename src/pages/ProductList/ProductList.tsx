@@ -1,8 +1,11 @@
 import { Product } from '../Product/Product';
 import { Aside } from '@/components/molecules/Aside';
 import { SortProductList } from '@/components/molecules/SortProductList';
+import { useQueryProducts } from '@/hook/useQueryProduct';
+import { ProductType } from '@/types/product/type';
 
 export const ProductList = () => {
+  const data = useQueryProducts();
   return (
     <div className="bg-gray-200 py-6">
       <div className="screen-max-width">
@@ -13,11 +16,10 @@ export const ProductList = () => {
           <div className="flex-1">
             <SortProductList />
             <div className="mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-              {Array(30)
-                .fill(0)
-                .map((_, index) => (
-                  <div className="col-span-1" key={index}>
-                    <Product />
+              {data &&
+                data.data.data.products.map((products: ProductType) => (
+                  <div className="col-span-1" key={products._id}>
+                    <Product product={products} />
                   </div>
                 ))}
             </div>

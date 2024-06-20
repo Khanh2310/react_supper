@@ -6,3 +6,19 @@ export const facebookLogo = facebook;
 export const googleLogo = google;
 export const iconStart = star;
 export const iconStartDefault = starDefault;
+
+export const formatCurrency = (currency: number) => {
+  return new Intl.NumberFormat('de-DE', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(currency);
+};
+
+export const formatNumberToSocialStyle = (value: number) => {
+  return new Intl.NumberFormat('en', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  })
+    .format(value)
+    .replace('.', ',');
+};
