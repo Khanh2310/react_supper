@@ -1,4 +1,8 @@
-export const Rating = ({ rating }: { rating: number }) => {
+interface IRating {
+  rating: number;
+}
+
+export const Rating = ({ rating }: IRating) => {
   /*
   - rating: 3.4
   1* <= 3.4 => 100%
@@ -25,7 +29,7 @@ export const Rating = ({ rating }: { rating: number }) => {
         .map((_, index) => (
           <div className="relative" key={index}>
             <div
-              className="absolute top-0 left-0 h-full  overflow-hidden"
+              className="absolute top-0 left-0 h-full overflow-hidden"
               style={{ width: handleWidth(index + 1) }}
             >
               <svg

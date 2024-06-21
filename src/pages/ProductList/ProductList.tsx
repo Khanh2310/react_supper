@@ -1,11 +1,15 @@
+import { Pagination } from '@/components/molecules/Pagination';
 import { Product } from '../Product/Product';
 import { Aside } from '@/components/molecules/Aside';
 import { SortProductList } from '@/components/molecules/SortProductList';
 import { useQueryProducts } from '@/hook/useQueryProduct';
 import { ProductType } from '@/types/product/type';
+import { useState } from 'react';
 
 export const ProductList = () => {
   const data = useQueryProducts();
+  const [currentPage, setCurrentPage] = useState(1);
+
   return (
     <div className="bg-gray-200 py-6">
       <div className="screen-max-width">
@@ -23,6 +27,11 @@ export const ProductList = () => {
                   </div>
                 ))}
             </div>
+            <Pagination
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              totalPage={20}
+            />
           </div>
         </div>
       </div>
