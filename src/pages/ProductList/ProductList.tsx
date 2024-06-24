@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 export const ProductList = () => {
   const data = useQueryProducts();
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   return (
     <div className="bg-gray-200 py-6">
