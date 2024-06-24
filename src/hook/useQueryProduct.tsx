@@ -1,9 +1,12 @@
 import { axiosInstance } from '@/config/axiosInstance';
 import { ResponseApi } from '@/types';
+import { omitBy, isUndefined } from 'lodash';
+
 import {
   ProductListConfig,
   ProductListType,
   ProductType,
+  QueryConfig,
 } from '@/types/product/type';
 import { useQuery } from '@tanstack/react-query';
 import { useQueryParams } from './useQueryParams';
@@ -15,10 +18,26 @@ const getProducts = (params: ProductListConfig) => {
 };
 
 export const useQueryProducts = () => {
-  const queryParams = useQueryParams();
+  const queryParams: QueryConfig = useQueryParams();
+
+  const queryConfig: QueryConfig = omitBy(
+    {
+      page: queryParams.page || '1',
+      limit: queryParams.limit,
+      sort_by: queryParams.sort_by,
+      exclude: queryParams.exclude,
+      name: queryParams.name,
+      order: queryParams.order,
+      price_max: queryParams.price_max,
+      price_min: queryParams.price_min,
+      rating_filter: queryParams.rating_filter,
+    },
+    isUndefined
+  );
+
   const { data } = useQuery({
-    queryKey: ['products', queryParams],
-    queryFn: () => getProducts(queryParams),
+    queryKey: ['products', queryConfig],
+    queryFn: () => getProducts(queryConfig as ProductListConfig),
   });
   return data;
 };

@@ -1,9 +1,9 @@
-import React from 'react';
 import classNames from 'classnames';
+import { Link, createSearchParams } from 'react-router-dom';
 interface IPagination {
-  currentPage: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  queryConfig: any;
   totalPage: number;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 /*
@@ -27,11 +27,9 @@ interface IPagination {
 
 */
 
-export const Pagination = ({
-  setCurrentPage,
-  currentPage,
-  totalPage,
-}: IPagination) => {
+export const Pagination = ({ queryConfig, totalPage }: IPagination) => {
+  console.log(queryConfig);
+  const page = Number(queryConfig.page);
   const RANGE = 2;
   const renderPagination = () => {
     let dotAfter = false;
@@ -42,12 +40,12 @@ export const Pagination = ({
       if (!dotAfter) {
         dotAfter = true;
         return (
-          <button
+          <span
             className="bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer border"
             key={index}
           >
             ...
-          </button>
+          </span>
         );
       }
       return null;
@@ -56,12 +54,12 @@ export const Pagination = ({
       if (!dotBefore) {
         dotBefore = true;
         return (
-          <button
+          <span
             className="bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer border"
             key={index}
           >
             ...
-          </button>
+          </span>
         );
       }
       return null;
@@ -71,56 +69,90 @@ export const Pagination = ({
       .map((_, index) => {
         const pageNumber = index + 1;
         if (
-          currentPage <= RANGE * 2 + 1 &&
-          pageNumber > currentPage + RANGE &&
+          page <= RANGE * 2 + 1 &&
+          pageNumber > page + RANGE &&
           pageNumber < totalPage - RANGE + 1
         ) {
           return renderDotAfter(index);
-        } else if (
-          currentPage > RANGE * 2 + 1 &&
-          currentPage < totalPage - RANGE * 2
-        ) {
-          if (pageNumber < currentPage - RANGE && pageNumber > RANGE) {
+        } else if (page > RANGE * 2 + 1 && page < totalPage - RANGE * 2) {
+          if (pageNumber < page - RANGE && pageNumber > RANGE) {
             return renderDotBefore(index);
           } else if (
-            pageNumber > currentPage + RANGE &&
+            pageNumber > page + RANGE &&
             pageNumber < totalPage - RANGE + 1
           ) {
             return renderDotAfter(index);
           }
         } else if (
-          currentPage >= totalPage - RANGE * 2 &&
+          page >= totalPage - RANGE * 2 &&
           pageNumber > RANGE &&
-          pageNumber < currentPage - RANGE
+          pageNumber < page - RANGE
         ) {
           return renderDotBefore(index);
         }
         return (
-          <button
+          <Link
+            to={{
+              pathname: '/',
+              search: createSearchParams({
+                ...queryConfig,
+                page: pageNumber.toString(),
+              }).toString(),
+            }}
             key={index}
             className={classNames(
               'bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer border',
               {
-                'border-cyan-500': currentPage === pageNumber,
-                'border-s-transparent': currentPage !== pageNumber,
+                'border-cyan-500': page === pageNumber,
+                'border-s-transparent': page !== pageNumber,
               }
             )}
-            onClick={() => setCurrentPage(pageNumber)}
           >
             {pageNumber}
-          </button>
+          </Link>
         );
       });
   };
+
   return (
     <div className="flex flex-wrap mt-6 justify-center">
-      <button className="bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer border">
-        Prev
-      </button>
+      {page === 1 ? (
+        <span className="bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-not-allowed border">
+          Prev
+        </span>
+      ) : (
+        <Link
+          to={{
+            pathname: '/',
+            search: createSearchParams({
+              ...queryConfig,
+              page: (page - 1).toString(),
+            }).toString(),
+          }}
+          className="bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer border"
+        >
+          Prev
+        </Link>
+      )}
       {renderPagination()}
-      <button className="bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer border">
-        Next
-      </button>
+      {page === totalPage ? (
+        <span className="bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-not-allowed border">
+          Next
+        </span>
+      ) : (
+        <Link
+          to={{
+            pathname: '/',
+            search: createSearchParams({
+              ...queryConfig,
+              page: page + 1,
+            }).toString(),
+          }}
+          className="bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer border"
+        >
+          Next
+        </Link>
+      )}
     </div>
   );
 };

@@ -4,12 +4,15 @@ interface IRating {
 
 export const Rating = ({ rating }: IRating) => {
   /*
-  - rating: 3.4
+
+  - default rating: 3.4
+  
   1* <= 3.4 => 100%
   2* <= 3.4 => 100%
   3* <= 3.4 => 100%
   4* > 3.4 => 40% (4 - 3.4 < 1)
   5* > 3.4 => 0% (5 - 3.4 > 1)
+  
 */
 
   const handleWidth = (order: number) => {
