@@ -34,7 +34,10 @@ export const ProductList = () => {
               <Aside />
             </div>
             <div className="flex-1">
-              <SortProductList />
+              <SortProductList
+                queryConfig={queryConfig}
+                totalPage={data.data.data.pagination.page_size}
+              />
               <div className="mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
                 {data.data.data.products.map((products) => (
                   <div className="col-span-1" key={products._id}>

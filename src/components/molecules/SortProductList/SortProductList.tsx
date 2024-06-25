@@ -1,16 +1,73 @@
-export const SortProductList = () => {
+import { ProductListConfig, QueryConfig } from '@/types/product/type';
+import classNames from 'classnames';
+import { createSearchParams, useNavigate } from 'react-router-dom';
+interface IProps {
+  queryConfig: QueryConfig;
+  totalPage: number;
+}
+export const SortProductList = ({ queryConfig, totalPage }: IProps) => {
+  const { sort_by = 'createdAt' } = queryConfig;
+  console.log(totalPage);
+  const isActive = (
+    sortByValue: Exclude<ProductListConfig['sort_by'], undefined>
+  ) => {
+    return sort_by === sortByValue;
+  };
+
+  const navigate = useNavigate();
+
+  const handleSort = (
+    sortByValue: Exclude<ProductListConfig['sort_by'], undefined>
+  ) => {
+    navigate({
+      pathname: '/',
+      search: createSearchParams({
+        ...queryConfig,
+        sort_by: sortByValue,
+      }).toString(),
+    });
+  };
   return (
     <div className="bg-gray-300/40 py-4 px-7 flex justify-between items-center">
       <div className="flex items-center flex-wrap justify-between gap-2">
         <div className="flex items-center flex-wrap gap-[10px]">
           <div>Sắp xếp theo</div>
-          <button className="h-8 px-4 capitalize rounded-sm bg-orange text-white text-sm hover:bg-orange/80 text-center">
+          <button
+            className={classNames(
+              'h-8 px-4 capitalize rounded-sm text-sm text-center',
+              {
+                'bg-orange text-white hover:bg-orange/80': isActive('view'),
+                'bg-white text-black hover:bg-slate-100': !isActive('view'),
+              }
+            )}
+            onClick={() => handleSort('view')}
+          >
             Phổ biến
           </button>
-          <button className="h-8 px-4 capitalize bg-white rounded-sm text-gray-700 hover:text-white text-sm hover:bg-orange text-center">
+          <button
+            className={classNames(
+              'h-8 px-4 capitalize rounded-sm text-sm text-center',
+              {
+                'bg-orange text-white hover:bg-orange/80':
+                  isActive('createdAt'),
+                'bg-white text-black hover:bg-slate-100':
+                  !isActive('createdAt'),
+              }
+            )}
+            onClick={() => handleSort('createdAt')}
+          >
             Mới nhất
           </button>
-          <button className="h-8 px-4 capitalize bg-white rounded-sm text-gray-700 hover:text-white text-sm hover:bg-orange text-center">
+          <button
+            className={classNames(
+              'h-8 px-4 capitalize rounded-sm text-sm text-center',
+              {
+                'bg-orange text-white hover:bg-orange/80': isActive('sold'),
+                'bg-white text-black hover:bg-slate-100': !isActive('sold'),
+              }
+            )}
+            onClick={() => handleSort('sold')}
+          >
             Bán chạy
           </button>
           <div className="relative group">

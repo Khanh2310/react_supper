@@ -1,8 +1,9 @@
+import { QueryConfig } from '@/types/product/type';
 import classNames from 'classnames';
 import { Link, createSearchParams } from 'react-router-dom';
 interface IPagination {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  queryConfig: any;
+  queryConfig: QueryConfig;
   totalPage: number;
 }
 
@@ -28,7 +29,6 @@ interface IPagination {
 */
 
 export const Pagination = ({ queryConfig, totalPage }: IPagination) => {
-  console.log(queryConfig);
   const page = Number(queryConfig.page);
   const RANGE = 2;
   const renderPagination = () => {
@@ -145,7 +145,7 @@ export const Pagination = ({ queryConfig, totalPage }: IPagination) => {
             pathname: '/',
             search: createSearchParams({
               ...queryConfig,
-              page: page + 1,
+              page: (page + 1).toString(),
             }).toString(),
           }}
           className="bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer border"
