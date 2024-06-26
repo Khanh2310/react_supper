@@ -25,11 +25,15 @@ export const Product = ({ product }: IProduct) => {
           <div className="mt-3 flex items-center">
             <div className="text-orange truncate">
               <span className="text-xs">đ</span>
-              <span>{formatCurrency(Number(product.price))}</span>
+              <span className="text-sm">
+                {formatCurrency(Number(product.price))}
+              </span>
             </div>
             <div className="ml-1 line-through max-w-[50%] text-gray-800 truncate">
               <span className="text-xs">đ</span>
-              <span>{formatCurrency(product.price_before_discount)}</span>
+              <span className="text-sm">
+                {formatCurrency(product.price_before_discount)}
+              </span>
             </div>
           </div>
           <div className="mt-3 flex items-center justify-start">

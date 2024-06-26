@@ -1,13 +1,14 @@
 import { ProductListConfig, QueryConfig } from '@/types/product/type';
 import classNames from 'classnames';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { omit } from 'lodash';
+import { Link, createSearchParams, useNavigate } from 'react-router-dom';
 interface IProps {
   queryConfig: QueryConfig;
   totalPage: number;
 }
 export const SortProductList = ({ queryConfig, totalPage }: IProps) => {
-  const { sort_by = 'createdAt' } = queryConfig;
-  console.log(totalPage);
+  const { sort_by = 'createdAt', order = 'desc' } = queryConfig;
+  const page = Number(queryConfig.page);
   const isActive = (
     sortByValue: Exclude<ProductListConfig['sort_by'], undefined>
   ) => {
@@ -21,9 +22,27 @@ export const SortProductList = ({ queryConfig, totalPage }: IProps) => {
   ) => {
     navigate({
       pathname: '/',
+      search: createSearchParams(
+        omit(
+          {
+            ...queryConfig,
+            sort_by: sortByValue,
+          },
+          ['order']
+        )
+      ).toString(),
+    });
+  };
+
+  const handlePriceOrder = (
+    orderValue: Exclude<ProductListConfig['order'], undefined>
+  ) => {
+    navigate({
+      pathname: '/',
       search: createSearchParams({
         ...queryConfig,
-        sort_by: sortByValue,
+        sort_by: 'price',
+        order: orderValue,
       }).toString(),
     });
   };
@@ -70,81 +89,135 @@ export const SortProductList = ({ queryConfig, totalPage }: IProps) => {
           >
             Bán chạy
           </button>
-          <div className="relative group">
-            <div className="flex items-center justify-between bg-white px-4 h-8 min-w-[205px] cursor-pointer rounded-sm hover:bg-gray-50/100">
-              <a href="/" className="text-sm font-medium text-gray-700">
-                Giá
-              </a>
+
+          <select
+            className={classNames(
+              'h-8 px-4  text-left text-sm capitalize outline-none min-w-[205px]',
+              {
+                'bg-orange text-white hover:bg-orange/80': isActive('price'),
+                'bg-white text-black ': !isActive('price'),
+              }
+            )}
+            value={order || ''}
+            onChange={(e) =>
+              handlePriceOrder(
+                e.target.value as Exclude<ProductListConfig['order'], undefined>
+              )
+            }
+          >
+            <option value="" disabled className="bg-white text-black">
+              {' '}
+              Giá
+            </option>
+            <option value="asc" className="bg-white text-black">
+              {' '}
+              Giá: Thấp đến cao
+            </option>
+            <option value="desc" className="bg-white text-black">
+              {' '}
+              Giá: Cao đến thấp
+            </option>
+          </select>
+        </div>
+      </div>
+      <div className="flex items-center">
+        <div>
+          <span className="text-orange">{page}</span>
+          <span className="">/{totalPage}</span>
+        </div>
+        <div className="ml-5 flex">
+          {page === 1 ? (
+            <span className="px-3 h-8 rounded-tl-sm bg-white/60 hover:bg-slate-100 shadow flex items-center cursor-not-allowed">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
                 stroke="currentColor"
-                className="size-5"
+                className="size-3"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  d="M15.75 19.5 8.25 12l7.5-7.5"
                 />
               </svg>
-            </div>
-            <div className="invisible absolute z-50 flex w-full flex-col bg-white py-1 px-4 text-gray-800 shadow-xl group-hover:visible">
-              <a
-                href="/"
-                className="block text-sm my-2 py-1 text-gray-700 hover:text-orange"
-              >
-                Giá: Thấp đến Cao
-              </a>
-              <a
-                href="/"
-                className="block text-sm mb-2 py-1 text-gray-700 hover:text-orange"
-              >
-                Giá: Cao đến Thấp
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex items-center">
-        <div>
-          <span className="text-orange">1</span>
-          <span className="">/9</span>
-        </div>
-        <div className="ml-5">
-          <button className="px-3 h-8 rounded-tl-sm bg-white/60 hover:bg-slate-100 cursor-not-allowed shadow">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="size-3"
+            </span>
+          ) : (
+            <Link
+              to={{
+                pathname: '/',
+                search: createSearchParams({
+                  ...queryConfig,
+                  page: (page - 1).toString(),
+                }).toString(),
+              }}
+              className="px-3 h-8 rounded-tl-sm bg-white/60 hover:bg-slate-100 shadow flex items-center"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 19.5 8.25 12l7.5-7.5"
-              />
-            </svg>
-          </button>
-          <button className="px-3 h-8 rounded-tl-sm bg-transparent shadow">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="size-3"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="size-3"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 19.5 8.25 12l7.5-7.5"
+                />
+              </svg>
+            </Link>
+          )}
+
+          {page === totalPage ? (
+            <Link
+              to="/"
+              className="px-3 h-8 rounded-tl-sm bg-transparent shadow flex items-center cursor-not-allowed"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m8.25 4.5 7.5 7.5-7.5 7.5"
-              />
-            </svg>
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="size-3"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                />
+              </svg>
+            </Link>
+          ) : (
+            <Link
+              to={{
+                pathname: '/',
+                search: createSearchParams({
+                  ...queryConfig,
+                  page: (page + 1).toString(),
+                }).toString(),
+              }}
+              className="px-3 h-8 rounded-tl-sm bg-transparent shadow flex items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="size-3"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                />
+              </svg>
+            </Link>
+          )}
         </div>
       </div>
     </div>
