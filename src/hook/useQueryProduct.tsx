@@ -31,6 +31,7 @@ export const useQueryProducts = () => {
       price_max: queryParams.price_max,
       price_min: queryParams.price_min,
       rating_filter: queryParams.rating_filter,
+      category: queryParams.category,
     },
     isUndefined
   );

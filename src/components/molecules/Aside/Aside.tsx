@@ -1,8 +1,17 @@
 import { Button } from '@/components/atoms/Button';
+import { CategoryType } from '@/types/category/type';
+import { QueryConfig } from '@/types/product/type';
 import { iconStart } from '@/utils';
-import { Link } from 'react-router-dom';
+import classNames from 'classnames';
+import { Link, createSearchParams } from 'react-router-dom';
 
-export const Aside = () => {
+interface IProp {
+  queryConfig: QueryConfig;
+  categories: CategoryType[];
+}
+export const Aside = ({ queryConfig, categories }: IProp) => {
+  const { category } = queryConfig;
+
   return (
     <div className="py-4">
       <Link to="/" className="flex items-center font-bold">
@@ -24,34 +33,37 @@ export const Aside = () => {
       </Link>
       <div className="bg-gray-300 h-[1px] my-4" />
       <ul>
-        <li className="py-2 pl-2">
-          <Link
-            to="/"
-            className="relative px-2 text-orange font-semibold text-sm"
-          >
-            <svg
-              viewBox="0 0 4 7"
-              className="fill-orange h-2 w-2 absolute top-1 left-[-10px]"
-            >
-              <polygon points="4 3.5 0 0 0 7" />
-            </svg>
-            Thời trang nam
-          </Link>
-        </li>
-        <li className="py-2 pl-2">
-          <Link
-            to="/"
-            className="relative px-2 text-orange font-semibold text-sm"
-          >
-            <svg
-              viewBox="0 0 4 7"
-              className="fill-orange h-2 w-2 absolute top-1 left-[-10px]"
-            >
-              <polygon points="4 3.5 0 0 0 7" />
-            </svg>
-            Điện thoại
-          </Link>
-        </li>
+        {categories &&
+          categories.map((categoryItem) => {
+            const isActive = category === categoryItem._id;
+
+            return (
+              <li className="py-2 pl-2" key={categoryItem._id}>
+                <Link
+                  to={{
+                    pathname: '/',
+                    search: createSearchParams({
+                      ...queryConfig,
+                      category: categoryItem._id.toString(),
+                    }).toString(),
+                  }}
+                  className={classNames(' relative px-2 text-sm', {
+                    'text-orange font-semibold': isActive,
+                  })}
+                >
+                  {isActive && (
+                    <svg
+                      viewBox="0 0 4 7"
+                      className="fill-orange h-2 w-2 absolute top-1 left-[-10px]"
+                    >
+                      <polygon points="4 3.5 0 0 0 7" />
+                    </svg>
+                  )}
+                  {categoryItem.name}
+                </Link>
+              </li>
+            );
+          })}
       </ul>
       <Link to="/" className="flex items-center font-bold mt-4 uppercase">
         <svg

@@ -23,12 +23,12 @@ export const ProductList = () => {
       price_max: queryParams.price_max,
       price_min: queryParams.price_min,
       rating_filter: queryParams.rating_filter,
+      category: queryParams.category,
     },
     isUndefined
   );
 
-  const cate = useQueryCategory();
-  console.log(cate);
+  const categories = useQueryCategory();
 
   return (
     <div className="bg-gray-200 py-6">
@@ -36,7 +36,10 @@ export const ProductList = () => {
         {data && (
           <div className="flex justify-between gap-6">
             <div className="w-full max-w-[300px]">
-              <Aside />
+              <Aside
+                categories={categories?.data.data || []}
+                queryConfig={queryConfig}
+              />
             </div>
             <div className="flex-1">
               <SortProductList
