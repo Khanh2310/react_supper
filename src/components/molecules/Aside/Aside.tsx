@@ -14,7 +14,12 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
 
   return (
     <div className="py-4">
-      <Link to="/" className="flex items-center font-bold">
+      <Link
+        to="/"
+        className={classNames('flex items-center font-bold', {
+          'text-orange': !category,
+        })}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
