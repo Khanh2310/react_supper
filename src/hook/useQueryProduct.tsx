@@ -8,7 +8,7 @@ import {
   ProductType,
   QueryConfig,
 } from '@/types/product/type';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useQueryParams } from './useQueryParams';
 
 const getProducts = (params: ProductListConfig) => {
@@ -38,6 +38,7 @@ export const useQueryProducts = () => {
   const { data } = useQuery({
     queryKey: ['products', queryConfig],
     queryFn: () => getProducts(queryConfig as ProductListConfig),
+    placeholderData: keepPreviousData,
   });
   return data;
 };

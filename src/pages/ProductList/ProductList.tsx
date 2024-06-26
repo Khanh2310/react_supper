@@ -6,6 +6,7 @@ import { useQueryProducts } from '@/hook/useQueryProduct';
 import { QueryConfig } from '@/types/product/type';
 import { omitBy, isUndefined } from 'lodash';
 import { useQueryParams } from '@/hook/useQueryParams';
+import { useQueryCategory } from '@/hook/useQueryCategory';
 
 export const ProductList = () => {
   const data = useQueryProducts();
@@ -25,6 +26,10 @@ export const ProductList = () => {
     },
     isUndefined
   );
+
+  const cate = useQueryCategory();
+  console.log(cate);
+
   return (
     <div className="bg-gray-200 py-6">
       <div className="screen-max-width">
