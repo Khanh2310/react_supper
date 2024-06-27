@@ -4,17 +4,50 @@ import { QueryConfig } from '@/types/product/type';
 import { iconStart } from '@/utils';
 import classNames from 'classnames';
 import { Link, createSearchParams } from 'react-router-dom';
-
+import { InputWithNumber } from '../InputWithNumber';
+import { Controller, useForm } from 'react-hook-form';
+import { filterPrice } from '@/schema/filter/type';
+import { yupResolver } from '@hookform/resolvers/yup';
 interface IProp {
   queryConfig: QueryConfig;
   categories: CategoryType[];
 }
+
+type FormData = {
+  price_min: string;
+  price_max: string;
+};
+
+const priceSchema = filterPrice.pick(['price_min', 'price_max']);
 export const Aside = ({ queryConfig, categories }: IProp) => {
   const { category } = queryConfig;
 
+  const {
+    control,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    defaultValues: {
+      price_min: '',
+      price_max: '',
+    },
+    resolver: yupResolver(priceSchema),
+  });
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+  const valueForm = watch();
+  console.log(errors);
   return (
     <div className="py-4">
-      <Link to="/" className="flex items-center font-bold">
+      <Link
+        to="/"
+        className={classNames('flex items-center font-bold', {
+          'text-orange': !category,
+        })}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -85,22 +118,43 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
       <div className="bg-gray-300 h-[1px] my-4" />
       <div className="my-5">
         <div className="Khoảng giá" />
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex items-center justify-center">
-            <input
-              type="text"
-              name="from"
-              maxLength={13}
-              placeholder="đ TỪ"
-              className="p-2 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm"
+            <Controller
+              control={control}
+              name="price_min"
+              render={({ field }) => {
+                return (
+                  <InputWithNumber
+                    type="text"
+                    name="from"
+                    maxLength={13}
+                    placeholder="đ TỪ"
+                    onChange={field.onChange}
+                    value={field.value}
+                    ref={field.ref}
+                  />
+                );
+              }}
             />
+
             <span className="w-10 h-[1px] bg-gray-400 mx-4" />
-            <input
-              type="text"
-              name="from"
-              placeholder="đ ĐẾN"
-              maxLength={13}
-              className="p-2 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm"
+            <Controller
+              control={control}
+              name="price_max"
+              render={({ field }) => {
+                return (
+                  <InputWithNumber
+                    type="text"
+                    name="from"
+                    maxLength={13}
+                    placeholder="đ TỪ"
+                    onChange={field.onChange}
+                    value={field.value}
+                    ref={field.ref}
+                  />
+                );
+              }}
             />
           </div>
           <Button className="w-full p-2 uppercase bg-orange text-white text-sm hover:bg-orange/80 mt-[30px] rounded-sm">
