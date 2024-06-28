@@ -1,13 +1,13 @@
 import { Button } from '@/components/atoms/Button';
 import { CategoryType } from '@/types/category/type';
 import { QueryConfig } from '@/types/product/type';
-import { iconStart } from '@/utils';
 import classNames from 'classnames';
 import { Link, createSearchParams, useNavigate } from 'react-router-dom';
 import { InputWithNumber } from '../InputWithNumber';
 import { Controller, useForm } from 'react-hook-form';
 import { filterPrice } from '@/schema/filter/type';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Rating } from '../Rating';
 interface IProp {
   queryConfig: QueryConfig;
   categories: CategoryType[];
@@ -25,7 +25,6 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
 
   const {
     control,
-    watch,
     handleSubmit,
     trigger,
     formState: { errors },
@@ -50,8 +49,7 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
       }).toString(),
     });
   };
-  const valueForm = watch();
-  console.log(errors);
+
   return (
     <div className="py-4">
       <Link
@@ -81,7 +79,6 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
         {categories &&
           categories.map((categoryItem) => {
             const isActive = category === categoryItem._id;
-
             return (
               <li className="py-2 pl-2" key={categoryItem._id}>
                 <Link
@@ -185,19 +182,14 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
       <div className="text-sm">Đánh giá</div>
       <ul className="py-3">
         <li className="py-1 pl-2">
-          <Link to="/" className="flex items-center text-sm">
+          <Link to="/">
             {Array(5)
               .fill(0)
               .map((_, index) => (
-                <div key={index}>
-                  <img
-                    src={iconStart}
-                    alt="iconStart"
-                    className="object-cover w-3 h-3"
-                  />
-                </div>
+                <Rating rating={5} key={index}>
+                  <span className="pl-2  text-sm">trở lên</span>
+                </Rating>
               ))}
-            <span className="pl-2">trở lên</span>
           </Link>
         </li>
       </ul>
