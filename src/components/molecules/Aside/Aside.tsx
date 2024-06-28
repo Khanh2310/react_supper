@@ -3,7 +3,7 @@ import { CategoryType } from '@/types/category/type';
 import { QueryConfig } from '@/types/product/type';
 import { iconStart } from '@/utils';
 import classNames from 'classnames';
-import { Link, createSearchParams } from 'react-router-dom';
+import { Link, createSearchParams, useNavigate } from 'react-router-dom';
 import { InputWithNumber } from '../InputWithNumber';
 import { Controller, useForm } from 'react-hook-form';
 import { filterPrice } from '@/schema/filter/type';
@@ -14,11 +14,12 @@ interface IProp {
 }
 
 type FormData = {
-  price_min: string;
-  price_max: string;
+  price_min?: string;
+  price_max?: string;
 };
 
 const priceSchema = filterPrice.pick(['price_min', 'price_max']);
+
 export const Aside = ({ queryConfig, categories }: IProp) => {
   const { category } = queryConfig;
 
@@ -26,6 +27,7 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
     control,
     watch,
     handleSubmit,
+    trigger,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
@@ -33,10 +35,20 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
       price_max: '',
     },
     resolver: yupResolver(priceSchema),
+    shouldFocusError: false,
   });
 
+  const navigate = useNavigate();
+
   const onSubmit = (data) => {
-    console.log(data);
+    navigate({
+      pathname: '/',
+      search: createSearchParams({
+        ...queryConfig,
+        price_max: data.price_max,
+        price_min: data.price_min,
+      }).toString(),
+    });
   };
   const valueForm = watch();
   console.log(errors);
@@ -127,12 +139,13 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
                 return (
                   <InputWithNumber
                     type="text"
-                    name="from"
                     maxLength={13}
                     placeholder="đ TỪ"
-                    onChange={field.onChange}
-                    value={field.value}
-                    ref={field.ref}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      trigger('price_min');
+                    }}
                   />
                 );
               }}
@@ -146,18 +159,24 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
                 return (
                   <InputWithNumber
                     type="text"
-                    name="from"
                     maxLength={13}
                     placeholder="đ TỪ"
-                    onChange={field.onChange}
-                    value={field.value}
-                    ref={field.ref}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      trigger('price_max');
+                    }}
                   />
                 );
               }}
             />
           </div>
-          <Button className="w-full p-2 uppercase bg-orange text-white text-sm hover:bg-orange/80 mt-[30px] rounded-sm">
+          <span className="text-sm text-red-600 min-h-[16px] text-center">
+            {errors.price_min?.message}
+          </span>
+          <Button
+            className={`w-full p-2 uppercase bg-orange text-white text-sm hover:bg-orange/80 rounded-sm  ${errors.price_min?.message || errors.price_max?.message ? 'mt-[14px]' : 'mt-[30px]'}`}
+          >
             Áp dụng
           </Button>
         </form>
