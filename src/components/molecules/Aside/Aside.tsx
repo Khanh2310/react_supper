@@ -1,31 +1,33 @@
 import { Button } from '@/components/atoms/Button';
 import { CategoryType } from '@/types/category/type';
 import { QueryConfig } from '@/types/product/type';
-import { iconStart } from '@/utils';
 import classNames from 'classnames';
-import { Link, createSearchParams } from 'react-router-dom';
+import { Link, createSearchParams, useNavigate } from 'react-router-dom';
 import { InputWithNumber } from '../InputWithNumber';
 import { Controller, useForm } from 'react-hook-form';
 import { filterPrice } from '@/schema/filter/type';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { AsideWithRating } from '../AsideWithRating';
+import { omit } from 'lodash';
 interface IProp {
   queryConfig: QueryConfig;
   categories: CategoryType[];
 }
 
 type FormData = {
-  price_min: string;
-  price_max: string;
+  price_min?: string;
+  price_max?: string;
 };
 
 const priceSchema = filterPrice.pick(['price_min', 'price_max']);
+
 export const Aside = ({ queryConfig, categories }: IProp) => {
   const { category } = queryConfig;
 
   const {
     control,
-    watch,
     handleSubmit,
+    trigger,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
@@ -33,13 +35,36 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
       price_max: '',
     },
     resolver: yupResolver(priceSchema),
+    shouldFocusError: false,
   });
 
+  const navigate = useNavigate();
+
   const onSubmit = (data) => {
-    console.log(data);
+    navigate({
+      pathname: '/',
+      search: createSearchParams({
+        ...queryConfig,
+        price_max: data.price_max,
+        price_min: data.price_min,
+      }).toString(),
+    });
   };
-  const valueForm = watch();
-  console.log(errors);
+
+  const handleRemoveAll = () => {
+    navigate({
+      pathname: '/',
+      search: createSearchParams(
+        omit(
+          {
+            ...queryConfig,
+          },
+          ['price_min', 'price_min', 'category', 'rating_filter']
+        )
+      ).toString(),
+    });
+  };
+
   return (
     <div className="py-4">
       <Link
@@ -69,7 +94,6 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
         {categories &&
           categories.map((categoryItem) => {
             const isActive = category === categoryItem._id;
-
             return (
               <li className="py-2 pl-2" key={categoryItem._id}>
                 <Link
@@ -127,12 +151,13 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
                 return (
                   <InputWithNumber
                     type="text"
-                    name="from"
                     maxLength={13}
                     placeholder="đ TỪ"
-                    onChange={field.onChange}
-                    value={field.value}
-                    ref={field.ref}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      trigger('price_min');
+                    }}
                   />
                 );
               }}
@@ -146,44 +171,36 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
                 return (
                   <InputWithNumber
                     type="text"
-                    name="from"
                     maxLength={13}
                     placeholder="đ TỪ"
-                    onChange={field.onChange}
-                    value={field.value}
-                    ref={field.ref}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      trigger('price_max');
+                    }}
                   />
                 );
               }}
             />
           </div>
-          <Button className="w-full p-2 uppercase bg-orange text-white text-sm hover:bg-orange/80 mt-[30px] rounded-sm">
+          <span className="text-sm text-red-600 min-h-[16px] text-center">
+            {errors.price_min?.message}
+          </span>
+          <Button
+            className={`w-full p-2 uppercase bg-orange text-white text-sm hover:bg-orange/80 rounded-sm  ${errors.price_min?.message || errors.price_max?.message ? 'mt-[14px]' : 'mt-[30px]'}`}
+          >
             Áp dụng
           </Button>
         </form>
       </div>
       <div className="bg-gray-300 h-[1px] my-4" />
       <div className="text-sm">Đánh giá</div>
-      <ul className="py-3">
-        <li className="py-1 pl-2">
-          <Link to="/" className="flex items-center text-sm">
-            {Array(5)
-              .fill(0)
-              .map((_, index) => (
-                <div key={index}>
-                  <img
-                    src={iconStart}
-                    alt="iconStart"
-                    className="object-cover w-3 h-3"
-                  />
-                </div>
-              ))}
-            <span className="pl-2">trở lên</span>
-          </Link>
-        </li>
-      </ul>
+      <AsideWithRating queryConfig={queryConfig} />
       <div className="bg-gray-300 h-[1px] my-4" />
-      <Button className="w-full p-2 uppercase bg-orange text-white text-sm hover:bg-orange/80 rounded-sm">
+      <Button
+        className="w-full p-2 uppercase bg-orange text-white text-sm hover:bg-orange/80 rounded-sm"
+        onClick={handleRemoveAll}
+      >
         Xóa tất cả
       </Button>
     </div>

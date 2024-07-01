@@ -1,10 +1,12 @@
+import { ReactNode } from 'react';
+
 interface IRating {
   rating: number;
+  children?: ReactNode;
 }
 
-export const Rating = ({ rating }: IRating) => {
+export const Rating = ({ rating, children }: IRating) => {
   /*
-
   - default rating: 3.4
   
   1* <= 3.4 => 100%
@@ -12,7 +14,7 @@ export const Rating = ({ rating }: IRating) => {
   3* <= 3.4 => 100%
   4* > 3.4 => 40% (4 - 3.4 < 1)
   5* > 3.4 => 0% (5 - 3.4 > 1)
-  
+
 */
 
   const handleWidth = (order: number) => {
@@ -66,6 +68,7 @@ export const Rating = ({ rating }: IRating) => {
             </svg>
           </div>
         ))}
+      {children}
     </div>
   );
 };
