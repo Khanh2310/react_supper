@@ -40,7 +40,8 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
 
   const navigate = useNavigate();
 
-  const onSubmit = (data) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onSubmit = (data: any) => {
     navigate({
       pathname: '/',
       search: createSearchParams({
