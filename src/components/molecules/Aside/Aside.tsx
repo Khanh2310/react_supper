@@ -7,7 +7,8 @@ import { InputWithNumber } from '../InputWithNumber';
 import { Controller, useForm } from 'react-hook-form';
 import { filterPrice } from '@/schema/filter/type';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Rating } from '../Rating';
+import { AsideWithRating } from '../AsideWithRating';
+import { omit } from 'lodash';
 interface IProp {
   queryConfig: QueryConfig;
   categories: CategoryType[];
@@ -47,6 +48,20 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
         price_max: data.price_max,
         price_min: data.price_min,
       }).toString(),
+    });
+  };
+
+  const handleRemoveAll = () => {
+    navigate({
+      pathname: '/',
+      search: createSearchParams(
+        omit(
+          {
+            ...queryConfig,
+          },
+          ['price_min', 'price_min', 'category', 'rating_filter']
+        )
+      ).toString(),
     });
   };
 
@@ -180,21 +195,12 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
       </div>
       <div className="bg-gray-300 h-[1px] my-4" />
       <div className="text-sm">Đánh giá</div>
-      <ul className="py-3">
-        <li className="py-1 pl-2">
-          <Link to="/">
-            {Array(5)
-              .fill(0)
-              .map((_, index) => (
-                <Rating rating={5} key={index}>
-                  <span className="pl-2  text-sm">trở lên</span>
-                </Rating>
-              ))}
-          </Link>
-        </li>
-      </ul>
+      <AsideWithRating queryConfig={queryConfig} />
       <div className="bg-gray-300 h-[1px] my-4" />
-      <Button className="w-full p-2 uppercase bg-orange text-white text-sm hover:bg-orange/80 rounded-sm">
+      <Button
+        className="w-full p-2 uppercase bg-orange text-white text-sm hover:bg-orange/80 rounded-sm"
+        onClick={handleRemoveAll}
+      >
         Xóa tất cả
       </Button>
     </div>
