@@ -9,7 +9,7 @@ interface IProduct {
 
 export const Product = ({ product }: IProduct) => {
   return (
-    <Link to="/">
+    <Link to={`${product._id}`}>
       <div className="border border-gray-300  bg-white rounded-sm shadow hover:-translate-y-[1px] duration-100 transition-transform">
         <div className="relative w-full pt-[100%]">
           <img
