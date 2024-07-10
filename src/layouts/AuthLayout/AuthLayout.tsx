@@ -1,4 +1,4 @@
-import { Footer } from '@/components/Footer';
+import { Footer } from '@/pages/Footer';
 import { ReactNode } from 'react';
 import { Link, useMatch } from 'react-router-dom';
 
