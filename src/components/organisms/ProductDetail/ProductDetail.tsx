@@ -1,9 +1,11 @@
 import { InputWithNumber } from '@/components/molecules/InputWithNumber';
 import { Rating } from '@/components/molecules/Rating';
 import { getProductsDetail } from '@/hook/useQueryProduct';
+import { ProductType } from '@/types/product/type';
 import { formatCurrency, formatNumberToSocialStyle, rateSale } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import DOMPurify from 'dompurify';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 export const ProductDetail = () => {
@@ -14,7 +16,41 @@ export const ProductDetail = () => {
     queryFn: () => getProductsDetail(id as string),
   });
 
+  const [currentIndexImages, setCurrentIndexImages] = useState([0, 5]);
+
+  console.log(currentIndexImages);
   const productDetail = listDataProductDetail?.data?.data;
+
+  const [activeImage, setActiveImage] = useState('');
+
+  const currentImages = useMemo(
+    () =>
+      productDetail ? productDetail.images.slice(...currentIndexImages) : [],
+    [currentIndexImages, productDetail]
+  );
+
+  const chooseActive = (img: string) => {
+    setActiveImage(img);
+  };
+
+  useEffect(() => {
+    if (productDetail && productDetail.images.length > 0) {
+      setActiveImage(productDetail.images[0]);
+    }
+  }, [productDetail]);
+
+  const next = () => {
+    if (currentIndexImages[1] < (productDetail as ProductType)?.images.length) {
+      setCurrentIndexImages((prev) => [prev[0] + 1, prev[1] + 1]);
+    }
+  };
+
+  const prev = () => {
+    if (currentIndexImages[0] > 0) {
+      setCurrentIndexImages((prev) => [prev[0] - 1, prev[1] - 1]);
+    }
+  };
+
   if (!productDetail) return null;
 
   return (
@@ -25,13 +61,16 @@ export const ProductDetail = () => {
             <div className="col-span-5">
               <div className="relative w-full pt-[100%] shadow">
                 <img
-                  src={productDetail.image}
+                  src={activeImage}
                   alt={productDetail.name}
                   className="absolute top-0 left-0 h-full w-full bg-white object-cover"
                 />
               </div>
               <div className="relative mt-4 grid grid-cols-5 gap-1">
-                <button className="absolute left-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/20 text-white">
+                <button
+                  className="absolute left-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/20 text-white"
+                  onClick={prev}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -48,11 +87,14 @@ export const ProductDetail = () => {
                   </svg>
                 </button>
 
-                {productDetail.images.slice(0, 5).map((img, index) => {
-                  const isActive = index === 0;
-                  console.log(productDetail.image);
+                {currentImages.map((img) => {
+                  const isActive = img === activeImage;
                   return (
-                    <div className="relative w-full pt-[100%]" key={img}>
+                    <div
+                      className="relative w-full pt-[100%]"
+                      key={img}
+                      onMouseEnter={() => chooseActive(img)}
+                    >
                       <img
                         src={img}
                         alt={productDetail.name}
@@ -65,19 +107,22 @@ export const ProductDetail = () => {
                   );
                 })}
 
-                <button className="absolute left-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/20 text-white">
+                <button
+                  className="absolute right-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/20 text-white"
+                  onClick={next}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
-                    className="size-5"
+                    className="size-6"
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      d="M15.75 19.5 8.25 12l7.5-7.5"
+                      d="m8.25 4.5 7.5 7.5-7.5 7.5"
                     />
                   </svg>
                 </button>
