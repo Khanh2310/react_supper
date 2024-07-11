@@ -3,9 +3,16 @@ import { ReactNode } from 'react';
 interface IRating {
   rating: number;
   children?: ReactNode;
+  acticeClassName?: string;
+  nonActiveClassName?: string;
 }
 
-export const Rating = ({ rating, children }: IRating) => {
+export const Rating = ({
+  rating,
+  children,
+  acticeClassName = 'fill-[#ffce3d] w-3 h-3',
+  nonActiveClassName = 'fill-current text-gray-300 w-3 h-3',
+}: IRating) => {
   /*
   - default rating: 3.4
   
@@ -42,7 +49,7 @@ export const Rating = ({ rating, children }: IRating) => {
                 viewBox="0 0 15 15"
                 x="0"
                 y="0"
-                className="fill-[#ffce3d] w-3 h-3"
+                className={acticeClassName}
               >
                 <polygon
                   points="7.5 .8 9.7 5.4 14.5 5.9 10.7 9.1 11.8 14.2 7.5 11.6 3.2 14.2 4.3 9.1 .5 5.9 5.3 5.4"
@@ -57,7 +64,7 @@ export const Rating = ({ rating, children }: IRating) => {
               viewBox="0 0 15 15"
               x="0"
               y="0"
-              className="fill-current text-gray-300 w-3 h-3"
+              className={nonActiveClassName}
             >
               <polygon
                 points="7.5 .8 9.7 5.4 14.5 5.9 10.7 9.1 11.8 14.2 7.5 11.6 3.2 14.2 4.3 9.1 .5 5.9 5.3 5.4"
