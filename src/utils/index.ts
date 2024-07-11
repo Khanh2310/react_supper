@@ -20,3 +20,7 @@ export const formatNumberToSocialStyle = (value: number) => {
     .replace('.', ',')
     .toLowerCase();
 };
+
+// giảm giá
+export const rateSale = (original: number, sale: number) =>
+  Math.round(((original - sale) / original) * 100) + '%';
