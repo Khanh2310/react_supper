@@ -5,7 +5,7 @@ import { ProductType } from '@/types/product/type';
 import { formatCurrency, formatNumberToSocialStyle, rateSale } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import DOMPurify from 'dompurify';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 export const ProductDetail = () => {
@@ -17,12 +17,9 @@ export const ProductDetail = () => {
   });
 
   const [currentIndexImages, setCurrentIndexImages] = useState([0, 5]);
-
-  console.log(currentIndexImages);
   const productDetail = listDataProductDetail?.data?.data;
-
   const [activeImage, setActiveImage] = useState('');
-
+  const imageRef = useRef<HTMLImageElement>(null);
   const currentImages = useMemo(
     () =>
       productDetail ? productDetail.images.slice(...currentIndexImages) : [],
@@ -51,6 +48,34 @@ export const ProductDetail = () => {
     }
   };
 
+  const handleZoom = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const image = imageRef.current as HTMLImageElement;
+    const { naturalHeight, naturalWidth } = image;
+    /* Cách 1: Lấy offsetX, offsetY đơn giản khi chúng ta xử lý được bubble event (pointer-events-none);
+    const { offsetX, offsetY } = event.nativeEvent;
+    */
+
+    /*
+    Cách 2: Lấy offsetX, offsetY khi chúng ta không xử lý được bubble envent
+    */
+    const offsetX = event.pageX - (rect.x + window.scrollX);
+    const offsetY = event.pageY - (rect.y + window.scrollY);
+
+    const top = offsetY * (1 - naturalHeight / rect.height);
+    const left = offsetX * (1 - naturalWidth / rect.width);
+
+    image.style.width = naturalWidth + 'px';
+    image.style.height = naturalHeight + 'px';
+    image.style.maxWidth = 'unset';
+    image.style.top = top + 'px';
+    image.style.left = left + 'px';
+  };
+
+  const handleZoomOut = () => {
+    imageRef.current?.removeAttribute('style');
+  };
+
   if (!productDetail) return null;
 
   return (
@@ -59,11 +84,16 @@ export const ProductDetail = () => {
         <div className="screen-max-width">
           <div className="grid grid-cols-12 gap-9">
             <div className="col-span-5">
-              <div className="relative w-full pt-[100%] shadow">
+              <div
+                className="relative w-full pt-[100%] shadow overflow-hidden cursor-zoom-in"
+                onMouseMove={handleZoom}
+                onMouseLeave={handleZoomOut}
+              >
                 <img
                   src={activeImage}
                   alt={productDetail.name}
-                  className="absolute top-0 left-0 h-full w-full bg-white object-cover"
+                  className="pointer-events-none absolute top-0 left-0 h-full w-full bg-white object-cover"
+                  ref={imageRef}
                 />
               </div>
               <div className="relative mt-4 grid grid-cols-5 gap-1">
