@@ -2,14 +2,20 @@ import { InputWithNumber } from '@/components/molecules/InputWithNumber';
 import { Rating } from '@/components/molecules/Rating';
 import { getProductsDetail } from '@/hook/useQueryProduct';
 import { ProductType } from '@/types/product/type';
-import { formatCurrency, formatNumberToSocialStyle, rateSale } from '@/utils';
+import {
+  formatCurrency,
+  formatNumberToSocialStyle,
+  getIdFromNameId,
+  rateSale,
+} from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import DOMPurify from 'dompurify';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 export const ProductDetail = () => {
-  const { id } = useParams();
+  const { nameId } = useParams();
+  const id = getIdFromNameId(nameId as string);
 
   const { data: listDataProductDetail } = useQuery({
     queryKey: ['product', id],
@@ -18,6 +24,7 @@ export const ProductDetail = () => {
 
   const [currentIndexImages, setCurrentIndexImages] = useState([0, 5]);
   const productDetail = listDataProductDetail?.data?.data;
+
   const [activeImage, setActiveImage] = useState('');
   const imageRef = useRef<HTMLImageElement>(null);
   const currentImages = useMemo(

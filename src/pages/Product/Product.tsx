@@ -1,6 +1,10 @@
 import { Rating } from '@/components/molecules/Rating';
 import { ProductType } from '@/types/product/type';
-import { formatCurrency, formatNumberToSocialStyle } from '@/utils';
+import {
+  formatCurrency,
+  formatNumberToSocialStyle,
+  generateNameId,
+} from '@/utils';
 import { Link } from 'react-router-dom';
 
 interface IProduct {
@@ -9,7 +13,7 @@ interface IProduct {
 
 export const Product = ({ product }: IProduct) => {
   return (
-    <Link to={`${product._id}`}>
+    <Link to={`/${generateNameId({ name: product.name, id: product._id })}`}>
       <div className="border border-gray-300  bg-white rounded-sm shadow hover:-translate-y-[1px] duration-100 transition-transform">
         <div className="relative w-full pt-[100%]">
           <img

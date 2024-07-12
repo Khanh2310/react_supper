@@ -33,7 +33,7 @@ export const RouterConfig = () => {
       <Routes>
         <Route element={<BasicLayout />}>
           <Route index element={<ProductList />} />
-          <Route path=":id" element={<ProductDetail />} />
+          <Route path=":nameId" element={<ProductDetail />} />
         </Route>
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
