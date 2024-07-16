@@ -1,11 +1,24 @@
-import { Link } from 'react-router-dom';
+import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import { useFloating, arrow } from '@floating-ui/react';
 import { useContext, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { logout } from '@/hook/useMutateUser';
 import { useMutation } from '@tanstack/react-query';
 import { AppContext } from '@/states/statusState.context';
+import { useQueryConfig } from '@/hook/useQueryConfig';
+import { useForm } from 'react-hook-form';
+import { SeacrchInput, SearchInputSchema } from '@/schema/filter/search.type';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { omit } from 'lodash';
 export const Header = () => {
+  const queryConfig = useQueryConfig();
+  const navigate = useNavigate();
+  const { register, handleSubmit } = useForm<SeacrchInput>({
+    defaultValues: {
+      name: '',
+    },
+    resolver: zodResolver(SearchInputSchema),
+  });
   const [open, setOpen] = useState(false);
   const arrowRef = useRef<HTMLDivElement>(null);
   const { setIsAuthenticated, isAuthenticated, setProfile, profile } =
@@ -44,6 +57,25 @@ export const Header = () => {
   const handleLogout = () => {
     logoutMutation.mutate();
   };
+
+  const onSubmitSearch = handleSubmit((data) => {
+    const config = queryConfig.order
+      ? omit(
+          {
+            ...queryConfig,
+            name: data.name,
+          },
+          ['order', 'sort_by']
+        )
+      : {
+          ...queryConfig,
+          name: data.name,
+        };
+    navigate({
+      pathname: '/',
+      search: createSearchParams(config).toString(),
+    });
+  });
 
   return (
     <header className="header_backgroud pb-5 pt-2">
@@ -110,7 +142,7 @@ export const Header = () => {
             ) : (
               <div
                 className="text-white text-sm relative"
-                ref={reference}
+                ref={reference as React.LegacyRef<HTMLDivElement> | undefined}
                 onMouseEnter={showPopover}
                 onMouseLeave={hidePopover}
               >
@@ -121,7 +153,9 @@ export const Header = () => {
                       initial={{ opacity: 0, scale: 0.5 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.2 }}
-                      ref={floating}
+                      ref={
+                        floating as React.LegacyRef<HTMLDivElement> | undefined
+                      }
                       style={{
                         position: strategy,
                         width: 'max-content',
@@ -173,11 +207,15 @@ export const Header = () => {
               </g>
             </svg>
           </Link>
-          <div className="flex items-center  border-white border-2 rounded-sm">
+          <form
+            className="flex items-center border-white border-2 rounded-sm"
+            onSubmit={onSubmitSearch}
+          >
             <input
               type="text"
               className="p-3 text-sm md:w-[600px] outline-none"
               placeholder="Tìm sản phẩm, thương hiệu, tên shop"
+              {...register('name')}
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -193,7 +231,7 @@ export const Header = () => {
                 d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
               />
             </svg>
-          </div>
+          </form>
         </div>
       </div>
     </header>
