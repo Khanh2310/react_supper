@@ -11,7 +11,7 @@ import {
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useQueryParams } from './useQueryParams';
 
-const getProducts = (params: ProductListConfig) => {
+export const getProducts = (params: ProductListConfig) => {
   return axiosInstance.get<ResponseApi<ProductListType>>('products', {
     params,
   });
@@ -40,6 +40,7 @@ export const useQueryProducts = () => {
     queryKey: ['products', queryConfig],
     queryFn: () => getProducts(queryConfig as ProductListConfig),
     placeholderData: keepPreviousData,
+    staleTime: 3 * 60 * 1000,
   });
   return data;
 };
