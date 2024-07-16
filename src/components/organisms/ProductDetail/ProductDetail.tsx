@@ -1,6 +1,6 @@
-import { InputWithNumber } from '@/components/molecules/InputWithNumber';
 import { Rating } from '@/components/molecules/Rating';
-import { getProductsDetail } from '@/hook/useQueryProduct';
+import { getProducts, getProductsDetail } from '@/hook/useQueryProduct';
+import { Product } from '@/pages/Product';
 import { ProductType } from '@/types/product/type';
 import {
   formatCurrency,
@@ -12,6 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import DOMPurify from 'dompurify';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Quantity } from '../Quantity';
 
 export const ProductDetail = () => {
   const { nameId } = useParams();
@@ -82,6 +83,21 @@ export const ProductDetail = () => {
   const handleZoomOut = () => {
     imageRef.current?.removeAttribute('style');
   };
+
+  const queryConfig = {
+    limit: '20',
+    page: '1',
+    category: productDetail?.category._id,
+  };
+
+  const { data: productData } = useQuery({
+    queryKey: ['products', queryConfig],
+    queryFn: () => {
+      return getProducts(queryConfig);
+    },
+    staleTime: 3 * 60 * 1000,
+    enabled: Boolean(productDetail),
+  });
 
   if (!productDetail) return null;
 
@@ -203,44 +219,7 @@ export const ProductDetail = () => {
               </div>
               <div className="mt-8 flex items-center">
                 <div className="capitalize text-gray-500">Số lượng</div>
-                <div className="ml-10 flex items-center ">
-                  <button className="flex h-8 w-8 items-center justify-center rounded-l-sm border border-gray-300 text-gray-600">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="size-4"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 12h14"
-                      />
-                    </svg>
-                  </button>
-                  <InputWithNumber
-                    value={1}
-                    className="h-8 w-14 border-y border-gray-300 p-1 text-center outline-none"
-                  />
-                  <button className="flex h-8 w-8 items-center justify-center rounded-r-sm border border-gray-300 text-gray-600">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="size-4"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
-                      />
-                    </svg>
-                  </button>
-                </div>
+                <Quantity />
                 <div className="ml-6 text-sm text-gray-500">
                   {productDetail.quantity} sản phẩm có sẵn
                 </div>
@@ -283,6 +262,22 @@ export const ProductDetail = () => {
               }}
             />
           </div>
+        </div>
+      </div>
+      <div className="mt-8 ">
+        <div className="screen-max-width">
+          <div className="uppercasetext-gray-400 mb-8">
+            Có thể bạn cũng thích
+          </div>
+          {productData && (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+              {productData.data.data.products.map((products) => (
+                <div className="col-span-1" key={products._id}>
+                  <Product product={products} />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
