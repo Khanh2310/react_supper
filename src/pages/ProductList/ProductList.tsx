@@ -3,33 +3,15 @@ import { Product } from '../Product/Product';
 import { Aside } from '@/components/molecules/Aside';
 import { SortProductList } from '@/components/molecules/SortProductList';
 import { useQueryProducts } from '@/hook/useQueryProduct';
-import { QueryConfig } from '@/types/product/type';
-import { omitBy, isUndefined } from 'lodash';
-import { useQueryParams } from '@/hook/useQueryParams';
 import { useQueryCategory } from '@/hook/useQueryCategory';
+import { useQueryConfig } from '@/hook/useQueryConfig';
 
 export const ProductList = () => {
   const data = useQueryProducts();
-  const queryParams: QueryConfig = useQueryParams();
-
-  const queryConfig: QueryConfig = omitBy(
-    {
-      page: queryParams.page || '1',
-      limit: queryParams.limit,
-      sort_by: queryParams.sort_by,
-      exclude: queryParams.exclude,
-      name: queryParams.name,
-      order: queryParams.order,
-      price_max: queryParams.price_max,
-      price_min: queryParams.price_min,
-      rating_filter: queryParams.rating_filter,
-      category: queryParams.category,
-    },
-    isUndefined
-  );
 
   const categories = useQueryCategory();
 
+  const queryConfig = useQueryConfig();
   return (
     <div className="bg-gray-200 py-6">
       <div className="screen-max-width">
