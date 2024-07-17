@@ -8,13 +8,16 @@ import {
   getIdFromNameId,
   rateSale,
 } from '@/utils';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import DOMPurify from 'dompurify';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Quantity } from '../Quantity';
+import { mutateAddToCart } from '@/hook/useMutatePurchases';
+import { PurchaseBodyType } from '@/types/purchase/type';
 
 export const ProductDetail = () => {
+  const [buyCount, setBuyCount] = useState(1);
   const { nameId } = useParams();
   const id = getIdFromNameId(nameId as string);
 
@@ -70,8 +73,8 @@ export const ProductDetail = () => {
     const offsetX = event.pageX - (rect.x + window.scrollX);
     const offsetY = event.pageY - (rect.y + window.scrollY);
 
-    const top = offsetY * (1 - naturalHeight / rect.height);
     const left = offsetX * (1 - naturalWidth / rect.width);
+    const top = offsetY * (1 - naturalHeight / rect.height);
 
     image.style.width = naturalWidth + 'px';
     image.style.height = naturalHeight + 'px';
@@ -98,6 +101,21 @@ export const ProductDetail = () => {
     staleTime: 3 * 60 * 1000,
     enabled: Boolean(productDetail),
   });
+
+  const handleBuyCount = (value: number) => {
+    setBuyCount(value);
+  };
+
+  const addToCartMutation = useMutation({
+    mutationFn: (body: PurchaseBodyType) => mutateAddToCart(body),
+  });
+
+  const addToCart = () => {
+    addToCartMutation.mutate({
+      buy_count: buyCount,
+      product_id: productDetail?._id as string,
+    });
+  };
 
   if (!productDetail) return null;
 
@@ -219,13 +237,22 @@ export const ProductDetail = () => {
               </div>
               <div className="mt-8 flex items-center">
                 <div className="capitalize text-gray-500">Số lượng</div>
-                <Quantity />
+                <Quantity
+                  onIncrease={handleBuyCount}
+                  onDecrease={handleBuyCount}
+                  onType={handleBuyCount}
+                  max={productDetail.quantity}
+                  value={buyCount}
+                />
                 <div className="ml-6 text-sm text-gray-500">
                   {productDetail.quantity} sản phẩm có sẵn
                 </div>
               </div>
               <div className="mt-8 flex items-center ">
-                <button className="flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-orange/5">
+                <button
+                  onClick={addToCart}
+                  className="flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-orange/5"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
