@@ -3,13 +3,16 @@ import { useFloating, arrow } from '@floating-ui/react';
 import { useContext, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { logout } from '@/hook/useMutateUser';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { AppContext } from '@/states/statusState.context';
 import { useQueryConfig } from '@/hook/useQueryConfig';
 import { useForm } from 'react-hook-form';
 import { SeacrchInput, SearchInputSchema } from '@/schema/filter/search.type';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { omit } from 'lodash';
+import { getPurchases } from '@/hook/useQueryPurchases';
+import { statusPurchase } from '@/types/purchase/type';
+import { emptyCart, formatCurrency } from '@/utils';
 export const Header = () => {
   const queryConfig = useQueryConfig();
   const navigate = useNavigate();
@@ -85,6 +88,19 @@ export const Header = () => {
       search: createSearchParams(config).toString(),
     });
   });
+
+  // Khi chúng ta chuyển trang thì header chỉ bị re-render
+  // Chứ không bị unmount - mouting again
+  // Nên các query này sẽ không bị inactive => không bị gọi lại nên không cần thiết set stale infinity
+  const { data: purchasesInCartData } = useQuery({
+    queryKey: ['purchases', { status: statusPurchase.inCart }],
+    queryFn: () =>
+      getPurchases({
+        status: statusPurchase.inCart,
+      }),
+  });
+
+  const purchasesInCart = purchasesInCartData?.data.data;
 
   return (
     <header className="header_backgroud pb-5 pt-2">
@@ -275,7 +291,7 @@ export const Header = () => {
                     top: 30,
                   }}
                 >
-                  <div className="bg-white shadow-md rounded-sm border relative md:w-[170px] md:right-[67%]   pl-5 py-2 modal">
+                  <div className="bg-white shadow-md rounded-sm border relative md:w-[600px] left-[-40%] -translate-x-2/4 px-5 py-2 modal">
                     <span
                       ref={arrowRef}
                       className=" border-x-transparent  border-t-transparent border-b-white border-[10px] -translate-y-full z-[1] top-0 right-8 "
@@ -285,12 +301,45 @@ export const Header = () => {
                         left: middlewareData.arrow?.x,
                       }}
                     />
-                    <Link
-                      to="/"
-                      className="hover:text-orange py-2 text-gray-700  text-sm block"
-                    >
-                      Đơn hàng
-                    </Link>
+                    {purchasesInCart ? (
+                      <div className="">
+                        <span className="text-sm text-gray-500">
+                          Sản phẩm mới thêm
+                        </span>
+                        <div className="mt-5">
+                          {purchasesInCart.map((purchase) => (
+                            <div className="flex mt-4" key={purchase._id}>
+                              <div className="flex-shrink-0">
+                                <img
+                                  src={purchase.product.image}
+                                  alt={purchase.product.image}
+                                  className="h-11 w-11 object-cover"
+                                />
+                              </div>
+                              <div className="ml-2 flex-grow overflow-hidden">
+                                <div className="truncate">
+                                  {purchase.product.name}
+                                </div>
+                              </div>
+                              <div className="ml-2 flex-shrink-0">
+                                <span className="text-orange">
+                                  ₫{formatCurrency(purchase.product.price)}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="my-5">
+                        <img
+                          src={emptyCart}
+                          alt="emptyCart"
+                          className="block w-15 h-15 m-auto object-cover mb-3"
+                        />
+                        <p className="text-xs text-center">Chưa có sản phẩm</p>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               )}

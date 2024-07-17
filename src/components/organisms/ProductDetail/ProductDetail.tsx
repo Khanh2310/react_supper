@@ -62,6 +62,7 @@ export const ProductDetail = () => {
   const handleZoom = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const image = imageRef.current as HTMLImageElement;
+
     const { naturalHeight, naturalWidth } = image;
     /* Cách 1: Lấy offsetX, offsetY đơn giản khi chúng ta xử lý được bubble event (pointer-events-none);
     const { offsetX, offsetY } = event.nativeEvent;
