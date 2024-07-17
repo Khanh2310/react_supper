@@ -20,6 +20,7 @@ export const Header = () => {
     resolver: zodResolver(SearchInputSchema),
   });
   const [open, setOpen] = useState(false);
+  const [showCart, setShowCart] = useState(false);
   const arrowRef = useRef<HTMLDivElement>(null);
   const { setIsAuthenticated, isAuthenticated, setProfile, profile } =
     useContext(AppContext);
@@ -44,6 +45,14 @@ export const Header = () => {
 
   const hidePopover = () => {
     setOpen(false);
+  };
+
+  const showPopoverCart = () => {
+    setShowCart(true);
+  };
+
+  const hidePopoverCart = () => {
+    setShowCart(false);
   };
 
   const logoutMutation = useMutation({
@@ -199,7 +208,7 @@ export const Header = () => {
           </div>
         </div>
 
-        <div className="mt-4 flex items-center ">
+        <div className="mt-4 flex items-center justify-between">
           <Link to="/" className="mr-10">
             <svg viewBox="0 0 192 65" className="w-[162px] fill-white">
               <g fillRule="evenodd">
@@ -232,6 +241,61 @@ export const Header = () => {
               />
             </svg>
           </form>
+
+          <div
+            className="relative"
+            ref={reference as React.LegacyRef<HTMLDivElement> | undefined}
+            onMouseEnter={showPopoverCart}
+            onMouseLeave={hidePopoverCart}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="size-6 text-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+              />
+            </svg>
+            <div className="">
+              {showCart && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.2 }}
+                  ref={floating as React.LegacyRef<HTMLDivElement> | undefined}
+                  style={{
+                    position: strategy,
+                    width: 'max-content',
+                    top: 30,
+                  }}
+                >
+                  <div className="bg-white shadow-md rounded-sm border relative md:w-[170px] md:right-[67%]   pl-5 py-2 modal">
+                    <span
+                      ref={arrowRef}
+                      className=" border-x-transparent  border-t-transparent border-b-white border-[10px] -translate-y-full z-[1] top-0 right-8 "
+                      style={{
+                        position: 'absolute',
+                        right: middlewareData.arrow?.y,
+                        left: middlewareData.arrow?.x,
+                      }}
+                    />
+                    <Link
+                      to="/"
+                      className="hover:text-orange py-2 text-gray-700  text-sm block"
+                    >
+                      Đơn hàng
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </header>

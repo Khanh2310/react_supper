@@ -8,15 +8,16 @@ import {
   getIdFromNameId,
   rateSale,
 } from '@/utils';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import DOMPurify from 'dompurify';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Quantity } from '../Quantity';
+import { mutateAddToCart } from '@/hook/useMutatePurchases';
+import { PurchaseBodyType } from '@/types/purchase/type';
 
 export const ProductDetail = () => {
   const [buyCount, setBuyCount] = useState(1);
-  console.log(buyCount);
   const { nameId } = useParams();
   const id = getIdFromNameId(nameId as string);
 
@@ -104,6 +105,18 @@ export const ProductDetail = () => {
   const handleBuyCount = (value: number) => {
     setBuyCount(value);
   };
+
+  const addToCartMutation = useMutation({
+    mutationFn: (body: PurchaseBodyType) => mutateAddToCart(body),
+  });
+
+  const addToCart = () => {
+    addToCartMutation.mutate({
+      buy_count: buyCount,
+      product_id: productDetail?._id as string,
+    });
+  };
+
   if (!productDetail) return null;
 
   return (
@@ -236,7 +249,10 @@ export const ProductDetail = () => {
                 </div>
               </div>
               <div className="mt-8 flex items-center ">
-                <button className="flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-orange/5">
+                <button
+                  onClick={addToCart}
+                  className="flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-orange/5"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
