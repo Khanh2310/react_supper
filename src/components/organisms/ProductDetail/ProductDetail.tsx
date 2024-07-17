@@ -15,6 +15,8 @@ import { useParams } from 'react-router-dom';
 import { Quantity } from '../Quantity';
 
 export const ProductDetail = () => {
+  const [buyCount, setBuyCount] = useState(1);
+  console.log(buyCount);
   const { nameId } = useParams();
   const id = getIdFromNameId(nameId as string);
 
@@ -70,8 +72,8 @@ export const ProductDetail = () => {
     const offsetX = event.pageX - (rect.x + window.scrollX);
     const offsetY = event.pageY - (rect.y + window.scrollY);
 
-    const top = offsetY * (1 - naturalHeight / rect.height);
     const left = offsetX * (1 - naturalWidth / rect.width);
+    const top = offsetY * (1 - naturalHeight / rect.height);
 
     image.style.width = naturalWidth + 'px';
     image.style.height = naturalHeight + 'px';
@@ -99,6 +101,9 @@ export const ProductDetail = () => {
     enabled: Boolean(productDetail),
   });
 
+  const handleBuyCount = (value: number) => {
+    setBuyCount(value);
+  };
   if (!productDetail) return null;
 
   return (
@@ -219,7 +224,13 @@ export const ProductDetail = () => {
               </div>
               <div className="mt-8 flex items-center">
                 <div className="capitalize text-gray-500">Số lượng</div>
-                <Quantity />
+                <Quantity
+                  onIncrease={handleBuyCount}
+                  onDecrease={handleBuyCount}
+                  onType={handleBuyCount}
+                  max={productDetail.quantity}
+                  value={buyCount}
+                />
                 <div className="ml-6 text-sm text-gray-500">
                   {productDetail.quantity} sản phẩm có sẵn
                 </div>
