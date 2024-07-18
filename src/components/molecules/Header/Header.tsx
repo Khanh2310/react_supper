@@ -259,7 +259,7 @@ export const Header = () => {
           </form>
 
           <div
-            className="relative"
+            className="relative cursor-pointer"
             ref={reference as React.LegacyRef<HTMLDivElement> | undefined}
             onMouseEnter={showPopoverCart}
             onMouseLeave={hidePopoverCart}
@@ -278,6 +278,9 @@ export const Header = () => {
                 d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
               />
             </svg>
+            <div className="absolute top-0 bg-white text-orange rounded-full right-0 text-xs px-2 py-1 -translate-y-1/2 translate-x-1/2">
+              {purchasesInCart?.length}
+            </div>
             <div className="">
               {showCart && (
                 <motion.div
@@ -303,13 +306,16 @@ export const Header = () => {
                       }}
                     />
                     {purchasesInCart ? (
-                      <div className="">
+                      <div className="py-2">
                         <span className="text-sm text-gray-500">
                           Sản phẩm mới thêm
                         </span>
                         <div className="mt-5">
-                          {purchasesInCart.map((purchase) => (
-                            <div className="flex mt-4" key={purchase._id}>
+                          {purchasesInCart.slice(0, 5).map((purchase) => (
+                            <div
+                              className="flex mt-2 py-2 hover:bg-gray-100"
+                              key={purchase._id}
+                            >
                               <div className="flex-shrink-0">
                                 <img
                                   src={purchase.product.image}
@@ -324,11 +330,30 @@ export const Header = () => {
                               </div>
                               <div className="ml-2 flex-shrink-0">
                                 <span className="text-orange">
-                                  ₫{formatCurrency(purchase.product.price)}
+                                  ₫
+                                  {formatCurrency(
+                                    Number(purchase.product.price)
+                                  )}
                                 </span>
                               </div>
                             </div>
                           ))}
+                        </div>
+                        <div className="mt-6 flex items-center justify-between">
+                          <div className="text-xs capitalize text-gray-500">
+                            {purchasesInCart.length > 5 ? (
+                              <span className="mr-2 text-orange">
+                                {' '}
+                                {purchasesInCart.length - 5}
+                              </span>
+                            ) : (
+                              ''
+                            )}
+                            Thêm hàng vào giỏ
+                          </div>
+                          <button className="rounded-sm bg-orange px-4 py-2 capitalize text-white hover:bg-opacity-90">
+                            Xem giỏ hàng
+                          </button>
                         </div>
                       </div>
                     ) : (
