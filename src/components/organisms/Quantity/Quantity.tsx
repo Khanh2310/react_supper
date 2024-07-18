@@ -1,5 +1,5 @@
 import { InputWithNumber } from '@/components/molecules/InputWithNumber';
-import { InputHTMLAttributes } from 'react';
+import { InputHTMLAttributes, useState } from 'react';
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   max?: number;
@@ -18,6 +18,8 @@ export const Quantity = ({
   value,
   ...rest
 }: Props) => {
+  const [localValue, setLocalValue] = useState<number>(Number(value || 0));
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // lấy giá trị người dùng truyền vào
     let _value = Number(event.target.value);
@@ -31,26 +33,29 @@ export const Quantity = ({
     }
 
     onType && onType(_value);
+    setLocalValue(_value);
   };
 
   // increase function
 
   const increase = () => {
-    let _value = Number(value) + 1;
+    let _value = Number(value || localValue) + 1;
     if (max !== undefined && _value > max) {
       _value = max;
     }
     onIncrease && onIncrease(_value);
+    setLocalValue(_value);
   };
 
   // decrease function
   const decrease = () => {
-    let _value = Number(value) - 1;
+    let _value = Number(value || localValue) - 1;
     if (_value < 1) {
       _value = 1;
     }
 
     onDecrease && onDecrease(_value);
+    setLocalValue(_value);
   };
 
   return (
@@ -73,7 +78,7 @@ export const Quantity = ({
       <InputWithNumber
         className="h-8 w-14 border-y border-gray-300 p-1 text-center outline-none"
         onChange={handleChange}
-        value={value}
+        value={value || localValue}
         {...rest}
       />
       <button
