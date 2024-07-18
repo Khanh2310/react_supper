@@ -11,7 +11,7 @@ export const InputWithNumber = forwardRef<HTMLInputElement, IProps>(
         // thực thi onChange callback từ bên ngoài truyền vào props
         onChange && onChange(e);
 
-        // cặp nhật localValue State
+        // cập nhật localValue State
         setLocalValue(value);
       }
     };
