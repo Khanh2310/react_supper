@@ -289,6 +289,7 @@ export const Header = () => {
                     position: strategy,
                     width: 'max-content',
                     top: 30,
+                    zIndex: 2,
                   }}
                 >
                   <div className="bg-white shadow-md rounded-sm border relative md:w-[600px] left-[-40%] -translate-x-2/4 px-5 py-2 modal">
