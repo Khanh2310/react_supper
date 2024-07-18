@@ -1,13 +1,18 @@
-import React, { InputHTMLAttributes, forwardRef } from 'react';
+import React, { InputHTMLAttributes, forwardRef, useState } from 'react';
 
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {}
 
 export const InputWithNumber = forwardRef<HTMLInputElement, IProps>(
-  function InputBase({ onChange, ...rest }, ref) {
+  function InputBase({ onChange, value = '', ...rest }, ref) {
+    const [localValue, setLocalValue] = useState<string>(value as string);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
-      if ((/^\d+$/.test(value) || value === '') && onChange) {
-        onChange(e);
+      if (/^\d+$/.test(value) || value === '') {
+        // thực thi onChange callback từ bên ngoài truyền vào props
+        onChange && onChange(e);
+
+        // cặp nhật localValue State
+        setLocalValue(value);
       }
     };
     return (
@@ -15,6 +20,7 @@ export const InputWithNumber = forwardRef<HTMLInputElement, IProps>(
         className="p-2 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm"
         {...rest}
         onChange={handleChange}
+        value={value || localValue}
         ref={ref}
       />
     );

@@ -249,11 +249,11 @@ export const ProductDetail = () => {
               <div className="mt-8 flex items-center">
                 <div className="capitalize text-gray-500">Số lượng</div>
                 <Quantity
-                  onIncrease={handleBuyCount}
-                  onDecrease={handleBuyCount}
-                  onType={handleBuyCount}
-                  max={productDetail.quantity}
-                  value={buyCount}
+                // onIncrease={handleBuyCount}
+                // onDecrease={handleBuyCount}
+                // onType={handleBuyCount}
+                // max={productDetail.quantity}
+                // value={buyCount}
                 />
                 <div className="ml-6 text-sm text-gray-500">
                   {productDetail.quantity} sản phẩm có sẵn
