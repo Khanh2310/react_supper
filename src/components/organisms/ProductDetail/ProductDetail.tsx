@@ -14,7 +14,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Quantity } from '../Quantity';
 import { mutateAddToCart } from '@/hook/useMutatePurchases';
-import { PurchaseBodyType } from '@/types/purchase/type';
+import { PurchaseBodyType, statusPurchase } from '@/types/purchase/type';
+import { queryClient } from '@/main';
 
 export const ProductDetail = () => {
   const [buyCount, setBuyCount] = useState(1);
@@ -112,10 +113,19 @@ export const ProductDetail = () => {
   });
 
   const addToCart = () => {
-    addToCartMutation.mutate({
-      buy_count: buyCount,
-      product_id: productDetail?._id as string,
-    });
+    addToCartMutation.mutate(
+      {
+        buy_count: buyCount,
+        product_id: productDetail?._id as string,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ['purchases', { status: statusPurchase.inCart }],
+          });
+        },
+      }
+    );
   };
 
   if (!productDetail) return null;
