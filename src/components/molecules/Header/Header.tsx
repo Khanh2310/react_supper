@@ -363,9 +363,12 @@ export const Header = () => {
                             )}
                             Thêm hàng vào giỏ
                           </div>
-                          <button className="rounded-sm bg-orange px-4 py-2 capitalize text-white hover:bg-opacity-90">
+                          <Link
+                            to="/cart"
+                            className="rounded-sm bg-orange px-4 py-2 capitalize text-white hover:bg-opacity-90"
+                          >
                             Xem giỏ hàng
-                          </button>
+                          </Link>
                         </div>
                       </div>
                     ) : (
