@@ -11,3 +11,12 @@ export const mutateAddToCart = (body: {
     body
   );
 };
+
+export const mutateBuyProducts = (
+  body: { product_id: string; buy_count: number }[]
+) => {
+  return axiosInstance.post<ResponseApi<PurchaseType[]>>(
+    'purchases/buy-products',
+    body
+  );
+};
