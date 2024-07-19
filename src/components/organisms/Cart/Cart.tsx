@@ -1,25 +1,39 @@
 import { Button } from '@/components/atoms/Button';
 import { getPurchases } from '@/hook/useQueryPurchases';
-import { AppContext } from '@/states/statusState.context';
-import { statusPurchase } from '@/types/purchase/type';
+import { PurchaseType, statusPurchase } from '@/types/purchase/type';
 import { formatCurrency } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
-import { useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Quantity } from '../Quantity';
 
+interface IExtendedPurchase extends PurchaseType {
+  disabled: boolean;
+  checked: boolean;
+}
 export const Cart = () => {
-  const { isAuthenticated } = useContext(AppContext);
+  const [extendedPurchase, setExtendedPurchase] = useState<IExtendedPurchase[]>(
+    []
+  );
   const { data: purchasesInCartData } = useQuery({
     queryKey: ['purchases', { status: statusPurchase.inCart }],
     queryFn: () =>
       getPurchases({
-        status: 0,
+        status: -1,
       }),
-    enabled: isAuthenticated,
   });
+  const purChaseInCart = purchasesInCartData?.data.data;
 
-  const extendedPurChase = purchasesInCartData?.data.data;
+  useEffect(() => {
+    setExtendedPurchase(
+      purChaseInCart?.map((purchase) => ({
+        ...purchase,
+        disabled: false,
+        checked: false,
+      })) || []
+    );
+  }, [purChaseInCart]);
+
   return (
     <div className="bg-neutral-100 py-16">
       <div className="screen-max-width">
@@ -44,8 +58,8 @@ export const Cart = () => {
               </div>
             </div>
             <div className="my-3 rounded-sm bg-white p-5 shadow">
-              {extendedPurChase &&
-                extendedPurChase.map((purchases, index) => (
+              {extendedPurchase &&
+                extendedPurchase.map((purchases, index) => (
                   <div
                     className="mb-5 grid grid-cols-12 rounded-sm border border-gray-200 bg-white py-5 px-4 text-center text-sm text-gray-500 first:mt-0"
                     key={index}
