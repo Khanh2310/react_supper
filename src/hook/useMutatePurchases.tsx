@@ -31,3 +31,9 @@ export const mutateUpdatePurchase = (body: {
     body
   );
 };
+
+export const mutateDeletePurchase = (purchaseId: string[]) => {
+  return axiosInstance.delete<ResponseApi<{ delete_count: number }>>(URL_PATH, {
+    data: purchaseId,
+  });
+};
