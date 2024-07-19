@@ -1,3 +1,4 @@
+import { Cart } from '@/components/organisms/Cart/Cart';
 import { ProductDetail } from '@/components/organisms/ProductDetail';
 import { BasicLayout } from '@/layouts/BasicLayout';
 import { Login } from '@/pages/Login';
@@ -37,6 +38,7 @@ export const RouterConfig = () => {
         </Route>
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/cart" element={<Cart />} />
         </Route>
         <Route element={<RejectedRoute />}>
           <Route path="login" element={<Login />} />
