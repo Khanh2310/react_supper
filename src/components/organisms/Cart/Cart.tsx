@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Quantity } from '../Quantity';
+import { produce } from 'immer';
 
 interface IExtendedPurchase extends PurchaseType {
   disabled: boolean;
@@ -33,6 +34,15 @@ export const Cart = () => {
       })) || []
     );
   }, [purChaseInCart]);
+
+  const handleChecked =
+    (productIndex: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      setExtendedPurchase(
+        produce((draft) => {
+          draft[productIndex].checked = event.target.checked;
+        })
+      );
+    };
 
   return (
     <div className="bg-neutral-100 py-16">
@@ -70,6 +80,8 @@ export const Cart = () => {
                           <input
                             type="checkbox"
                             className="h-5 w-5 accent-orange cursor-pointer"
+                            checked={purchases.checked}
+                            onChange={handleChecked(index)}
                           />
                         </div>
                         <div className="flex-grow">
