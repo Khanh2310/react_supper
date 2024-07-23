@@ -37,8 +37,10 @@ export const RouterConfig = () => {
           <Route path=":nameId" element={<ProductDetail />} />
         </Route>
         <Route element={<ProtectedRoute />}>
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route element={<BasicLayout />}>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/cart" element={<Cart />} />
+          </Route>
         </Route>
         <Route element={<RejectedRoute />}>
           <Route path="login" element={<Login />} />
