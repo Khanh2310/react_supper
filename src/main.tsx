@@ -17,13 +17,13 @@ export const queryClient = new QueryClient({
   },
 });
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <AppProvider>
-      <QueryClientProvider client={queryClient}>
-        <App />
-        <ToastContainer />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </AppProvider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <AppProvider>
+    <QueryClientProvider client={queryClient}>
+      <App />
+      <ToastContainer />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  </AppProvider>
+  // </React.StrictMode>
 );
