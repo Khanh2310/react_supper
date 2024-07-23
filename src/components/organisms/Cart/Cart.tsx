@@ -44,6 +44,17 @@ export const Cart = () => {
       );
     };
 
+  const isAllChecked = extendedPurchase?.every((purchase) => purchase.checked);
+
+  const handleCheckAll = () => {
+    setExtendedPurchase((prev) =>
+      prev.map((purchase) => ({
+        ...purchase,
+        checked: !isAllChecked,
+      }))
+    );
+  };
+
   return (
     <div className="bg-neutral-100 py-16">
       <div className="screen-max-width">
@@ -53,7 +64,12 @@ export const Cart = () => {
               <div className="col-span-6">
                 <div className="flex items-center">
                   <div className="flex flex-shrink-0 items-center justify-center pr-3">
-                    <input type="checkbox" className="h-5 w-5 accent-orange" />
+                    <input
+                      type="checkbox"
+                      className="h-5 w-5 accent-orange"
+                      checked={isAllChecked}
+                      onChange={handleCheckAll}
+                    />
                   </div>
                   <div className="flex-grow">Sản phẩm</div>
                 </div>
@@ -147,9 +163,16 @@ export const Cart = () => {
         <div className="static bottom-0 z-10 mt-8 flex flex-col rounded-sm border border-gray-100 bg-white p-5 shadow sm:flex-row sm:items-center">
           <div className="flex items-center">
             <div className="flex flex-shrink-0 items-center justify-center pr-3">
-              <input type="checkbox" className="h-5 w-5 accent-orange" />
+              <input
+                type="checkbox"
+                className="h-5 w-5 accent-orange"
+                checked={isAllChecked}
+                onClick={handleCheckAll}
+              />
             </div>
-            <button className="mx-3 border-none bg-none">Chọn tất cả</button>
+            <button className="mx-3 border-none bg-none">
+              Chọn tất cả ({extendedPurchase.length})
+            </button>
             <button className="mx-3 border-none bg-none">Xóa</button>
           </div>
 
