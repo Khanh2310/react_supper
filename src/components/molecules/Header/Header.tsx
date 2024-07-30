@@ -105,7 +105,7 @@ export const Header = () => {
     queryKey: ['purchases', { status: statusPurchase.inCart }],
     queryFn: () =>
       getPurchases({
-        status: statusPurchase.inCart,
+        status: -1,
       }),
     enabled: isAuthenticated,
   });
