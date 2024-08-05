@@ -30,12 +30,11 @@ export const Cart = () => {
   useEffect(() => {
     setExtendedPurchase((prev) => {
       const extendedPurchasesObject = keyBy(prev, '_id');
-      console.log(extendedPurchasesObject);
       return (
         purChaseInCart?.map((purchase) => ({
           ...purchase,
           disabled: false,
-          checked: false,
+          checked: Boolean(extendedPurchasesObject[purchase._id]?.checked),
         })) || []
       );
     });
@@ -69,18 +68,31 @@ export const Cart = () => {
     );
   };
 
-  const handleQuantity = (purchaseIndex: number, value: number) => {
+  const handleQuantity = (
+    purchaseIndex: number,
+    value: number,
+    enable: boolean
+  ) => {
     const purchase = extendedPurchase[purchaseIndex];
+    if (enable) {
+      setExtendedPurchase(
+        produce((draft) => {
+          draft[purchaseIndex].disabled = true;
+        })
+      );
+      useMutateUpdate.mutate({
+        product_id: purchase.product._id,
+        buy_count: value,
+      });
+    }
+  };
 
+  const handleTypeQuantity = (purchasetIndex: number) => (value: number) => {
     setExtendedPurchase(
       produce((draft) => {
-        draft[purchaseIndex].disabled = true;
+        draft[purchasetIndex].buy_count = value;
       })
     );
-    useMutateUpdate.mutate({
-      product_id: purchase.product._id,
-      buy_count: value,
-    });
   };
 
   return (
@@ -165,9 +177,29 @@ export const Cart = () => {
                             max={purchases.product.quantity}
                             value={purchases.buy_count}
                             classNameWrapper="flex item-center"
-                            onIncrease={(value) => handleQuantity(index, value)}
-                            onDecrease={(value) => handleQuantity(index, value)}
+                            onIncrease={(value) =>
+                              handleQuantity(
+                                index,
+                                value,
+                                value <= purchases.product.quantity
+                              )
+                            }
+                            onDecrease={(value) =>
+                              handleQuantity(index, value, value >= 1)
+                            }
                             disabled={purchases.disabled}
+                            onType={handleTypeQuantity(index)}
+                            onFocusOut={(value) =>
+                              handleQuantity(
+                                index,
+                                value,
+                                value >= 1 &&
+                                  value <= purchases.product.quantity &&
+                                  value !==
+                                    (purChaseInCart as PurchaseType[])[index]
+                                      .buy_count
+                              )
+                            }
                           />
                         </div>
                         <div className="col-span-1">

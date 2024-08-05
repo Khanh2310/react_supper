@@ -6,6 +6,7 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   onIncrease?: (value: number) => void;
   onDecrease?: (value: number) => void;
   onType?: (value: number) => void;
+  onFocusOut?: (value: number) => void;
   classNameWrapper?: string;
 }
 
@@ -14,6 +15,7 @@ export const Quantity = ({
   onIncrease,
   onDecrease,
   onType,
+  onFocusOut,
   classNameWrapper = 'ml-10',
   value,
   ...rest
@@ -58,6 +60,11 @@ export const Quantity = ({
     setLocalValue(_value);
   };
 
+  //onFocusOut
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement, Element>) => {
+    onFocusOut && onFocusOut(Number(e.target.value));
+  };
+
   return (
     <div className={`${classNameWrapper} flex items-center`}>
       <button
@@ -79,6 +86,7 @@ export const Quantity = ({
         className="h-8 w-14 border-y border-gray-300 p-1 text-center outline-none"
         onChange={handleChange}
         value={value || localValue}
+        onBlur={handleBlur}
         {...rest}
       />
       <button
