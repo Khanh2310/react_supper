@@ -13,6 +13,7 @@ import {
   mutateUpdatePurchase,
 } from '@/hook/useMutatePurchases';
 import { keyBy } from 'lodash';
+import { toast } from 'react-toastify';
 
 interface IExtendedPurchase extends PurchaseType {
   disabled: boolean;
@@ -62,7 +63,6 @@ export const Cart = () => {
   );
 
   const checkedPurchasesCount = checkedPurchases.length;
-  console.log(checkedPurchasesCount);
 
   const useMutateUpdate = useMutation({
     mutationFn: mutateUpdatePurchase,
@@ -110,8 +110,11 @@ export const Cart = () => {
   // buy products
   const buyProductMutation = useMutation({
     mutationFn: mutateBuyProducts,
-    onSuccess: () => {
+    onSuccess: (data) => {
       refetch();
+      toast.success(data.data.message, {
+        autoClose: 1000,
+      });
     },
   });
 
@@ -156,10 +159,13 @@ export const Cart = () => {
   // handle buy product
   const handleBuyPurchases = () => {
     if (checkedPurchases.length > 0) {
-      console.log(21);
+      const body = checkedPurchases.map((purchase) => ({
+        product_id: purchase.product._id,
+        buy_count: purchase.buy_count,
+      }));
+      buyProductMutation.mutate(body);
     }
   };
-  console.log(handleBuyPurchases);
 
   return (
     <div className="bg-neutral-100 py-16">
@@ -331,7 +337,11 @@ export const Cart = () => {
                 </div>
               </div>
             </div>
-            <Button className="mt-5 flex h-10 w-52 items-center justify-center bg-red-500 text-sm uppercase text-white hover:bg-red-600 sm:ml-4 sm:mt-0">
+            <Button
+              className="mt-5 flex h-10 w-52 items-center justify-center bg-red-500 text-sm uppercase text-white hover:bg-red-600 sm:ml-4 sm:mt-0"
+              onClick={handleBuyPurchases}
+              disabled={buyProductMutation.isPending}
+            >
               Mua hàng
             </Button>
           </div>
