@@ -60,7 +60,7 @@ export const Aside = ({ queryConfig, categories }: IProp) => {
           {
             ...queryConfig,
           },
-          ['price_min', 'price_min', 'category', 'rating_filter']
+          ['price_min', 'price_max', 'category', 'rating_filter']
         )
       ).toString(),
     });

@@ -43,6 +43,7 @@ export const AsideWithRating = ({ queryConfig }: IProps) => {
               {Array(5)
                 .fill(0)
                 .map((_, indexStar) => {
+                  console.log(indexStar);
                   if (indexStar < 5 - index) {
                     return (
                       <svg
