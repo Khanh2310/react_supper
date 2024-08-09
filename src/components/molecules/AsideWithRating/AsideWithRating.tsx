@@ -43,7 +43,6 @@ export const AsideWithRating = ({ queryConfig }: IProps) => {
               {Array(5)
                 .fill(0)
                 .map((_, indexStar) => {
-                  console.log(indexStar);
                   if (indexStar < 5 - index) {
                     return (
                       <svg
@@ -63,6 +62,7 @@ export const AsideWithRating = ({ queryConfig }: IProps) => {
                       </svg>
                     );
                   }
+
                   return (
                     <svg
                       viewBox="0 0 30 30"
