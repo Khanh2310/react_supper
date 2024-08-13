@@ -3,7 +3,7 @@ import { useFloating, arrow } from '@floating-ui/react';
 import { useContext, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { logout } from '@/hook/useMutateUser';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AppContext } from '@/states/statusState.context';
 import { useQueryConfig } from '@/hook/useQueryConfig';
 import { useForm } from 'react-hook-form';
@@ -13,9 +13,9 @@ import { omit } from 'lodash';
 import { getPurchases } from '@/hook/useQueryPurchases';
 import { statusPurchase } from '@/types/purchase/type';
 import { emptyCart, formatCurrency } from '@/utils';
-import { queryClient } from '@/main';
 export const Header = () => {
   const queryConfig = useQueryConfig();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<SeacrchInput>({
     defaultValues: {

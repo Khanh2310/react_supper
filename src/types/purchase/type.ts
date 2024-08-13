@@ -29,3 +29,8 @@ export const statusPurchase = {
   delivered: 4,
   cancelled: 5,
 };
+
+export interface IExtendedPurchase extends PurchaseType {
+  disabled: boolean;
+  checked: boolean;
+}

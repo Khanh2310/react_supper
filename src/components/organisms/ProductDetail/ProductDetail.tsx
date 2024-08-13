@@ -8,17 +8,17 @@ import {
   getIdFromNameId,
   rateSale,
 } from '@/utils';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import DOMPurify from 'dompurify';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Quantity } from '../Quantity';
 import { mutateAddToCart } from '@/hook/useMutatePurchases';
 import { PurchaseBodyType, statusPurchase } from '@/types/purchase/type';
-import { queryClient } from '@/main';
 
 export const ProductDetail = () => {
   const [buyCount, setBuyCount] = useState(1);
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { nameId } = useParams();
   const id = getIdFromNameId(nameId as string);
