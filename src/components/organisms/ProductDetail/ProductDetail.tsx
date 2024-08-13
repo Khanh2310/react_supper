@@ -11,7 +11,7 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import DOMPurify from 'dompurify';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Quantity } from '../Quantity';
 import { mutateAddToCart } from '@/hook/useMutatePurchases';
 import { PurchaseBodyType, statusPurchase } from '@/types/purchase/type';
@@ -19,6 +19,7 @@ import { queryClient } from '@/main';
 
 export const ProductDetail = () => {
   const [buyCount, setBuyCount] = useState(1);
+  const navigate = useNavigate();
   const { nameId } = useParams();
   const id = getIdFromNameId(nameId as string);
 
@@ -129,6 +130,21 @@ export const ProductDetail = () => {
   };
 
   if (!productDetail) return null;
+
+  // buy now
+  const buyNow = async () => {
+    const res = await addToCartMutation.mutateAsync({
+      buy_count: buyCount,
+      product_id: productDetail?._id as string,
+    });
+
+    const resItem = res.data.data;
+    navigate('/cart', {
+      state: {
+        purchaseId: resItem._id,
+      },
+    });
+  };
 
   return (
     <div className="bg-gray-200 py-6">
@@ -280,7 +296,10 @@ export const ProductDetail = () => {
                   </svg>
                   Thêm vào giỏ hàng
                 </button>
-                <button className="ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-orange px-5 capitalize text-white shadow-sm outline-none hover:bg-orange/90">
+                <button
+                  onClick={buyNow}
+                  className="ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-orange px-5 capitalize text-white shadow-sm outline-none hover:bg-orange/90 cursor-pointer"
+                >
                   Mua ngay
                 </button>
               </div>
