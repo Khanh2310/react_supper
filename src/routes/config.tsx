@@ -1,12 +1,13 @@
 import { Cart } from '@/components/organisms/Cart/Cart';
 import { ProductDetail } from '@/components/organisms/ProductDetail';
+import { localStorageEventTarget } from '@/hook/useQueryUser';
 import { BasicLayout } from '@/layouts/BasicLayout';
 import { Login } from '@/pages/Login';
 import { ProductList } from '@/pages/ProductList';
 import { Profile } from '@/pages/Profile';
 import { Register } from '@/pages/Register';
 import { AppContext } from '@/states/statusState.context';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 
 import {
   BrowserRouter,
@@ -29,6 +30,19 @@ const RejectedRoute = () => {
   return !isAuthenticated ? <Outlet /> : <Navigate to="/" />;
 };
 export const RouterConfig = () => {
+  const { reset } = useContext(AppContext);
+  useEffect(() => {
+    localStorageEventTarget.addEventListener(
+      'removeUserFromLocalStorage',
+      reset
+    );
+    return () => {
+      localStorageEventTarget.removeEventListener(
+        'removeUserFromLocalStorage',
+        reset
+      );
+    };
+  }, [reset]);
   return (
     <BrowserRouter>
       <Routes>

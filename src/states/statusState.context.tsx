@@ -12,6 +12,7 @@ interface IValue {
   setExtendedPurchase: React.Dispatch<
     React.SetStateAction<IExtendedPurchase[]>
   >;
+  reset: () => void;
 }
 const initialValue: IValue = {
   isAuthenticated: Boolean(getUserFromLocalStorage()),
@@ -20,6 +21,7 @@ const initialValue: IValue = {
   setProfile: () => null,
   extendedPurchase: [],
   setExtendedPurchase: () => null,
+  reset: () => null,
 };
 
 export const AppContext = createContext<IValue>(initialValue);
@@ -31,6 +33,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [extendedPurchase, setExtendedPurchase] = useState<IExtendedPurchase[]>(
     initialValue.extendedPurchase
   );
+
+  const reset = () => {
+    setIsAuthenticated(false);
+    setProfile(null);
+    setExtendedPurchase([]);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -40,6 +49,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         setProfile,
         extendedPurchase,
         setExtendedPurchase,
+        reset,
       }}
     >
       {children}
