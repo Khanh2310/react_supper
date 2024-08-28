@@ -25,6 +25,7 @@ export const Cart = () => {
         status: -1,
       }),
   });
+
   const purChaseInCart = purchasesInCartData?.data.data;
 
   const location = useLocation();
@@ -51,9 +52,11 @@ export const Cart = () => {
   }, [purChaseInCart, purchaseIdLocation, setExtendedPurchase]);
 
   useEffect(() => {
+    // xóa state trong history khi refresh F5 trang cart lại thì nó sẽ không còn checked nữa
     history.replaceState(null, '');
   }, []);
 
+  // set checked
   const handleChecked =
     (purchasetIndex: number) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,6 +88,7 @@ export const Cart = () => {
     },
   });
 
+  //  check all item
   const handleCheckAll = () => {
     setExtendedPurchase((prev) =>
       prev.map((purchase) => ({

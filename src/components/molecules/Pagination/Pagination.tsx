@@ -68,6 +68,7 @@ export const Pagination = ({ queryConfig, totalPage }: IPagination) => {
       .fill(0)
       .map((_, index) => {
         const pageNumber = index + 1;
+
         if (
           page <= RANGE * 2 + 1 &&
           pageNumber > page + RANGE &&

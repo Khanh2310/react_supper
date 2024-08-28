@@ -4,8 +4,11 @@ import { localStorageEventTarget } from '@/hook/useQueryUser';
 import { BasicLayout } from '@/layouts/BasicLayout';
 import { Login } from '@/pages/Login';
 import { ProductList } from '@/pages/ProductList';
-import { Profile } from '@/pages/Profile';
 import { Register } from '@/pages/Register';
+import { UserLayout } from '@/pages/User/layouts/UserLayout';
+import { ChangePassword } from '@/pages/User/pages/ChangePassword';
+import { HistoryPurchase } from '@/pages/User/pages/HistoryPurchase';
+import { Profile } from '@/pages/User/pages/Profile';
 import { AppContext } from '@/states/statusState.context';
 import { useContext, useEffect } from 'react';
 
@@ -36,6 +39,8 @@ export const RouterConfig = () => {
       'removeUserFromLocalStorage',
       reset
     );
+
+    // cleanup function
     return () => {
       localStorageEventTarget.removeEventListener(
         'removeUserFromLocalStorage',
@@ -43,6 +48,7 @@ export const RouterConfig = () => {
       );
     };
   }, [reset]);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -52,7 +58,11 @@ export const RouterConfig = () => {
         </Route>
         <Route element={<ProtectedRoute />}>
           <Route element={<BasicLayout />}>
-            <Route path="/profile" element={<Profile />} />
+            <Route path="user" element={<UserLayout />}>
+              <Route path="profile" element={<Profile />} />
+              <Route path="password" element={<ChangePassword />} />
+              <Route path="history" element={<HistoryPurchase />} />
+            </Route>
             <Route path="/cart" element={<Cart />} />
           </Route>
         </Route>

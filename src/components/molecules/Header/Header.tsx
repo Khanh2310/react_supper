@@ -207,7 +207,7 @@ export const Header = () => {
                           }}
                         />
                         <Link
-                          to="/profile"
+                          to="user/profile"
                           className="hover:text-orange py-2  text-gray-700  text-sm block"
                         >
                           Tài khoản của tôi
