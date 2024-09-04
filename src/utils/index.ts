@@ -3,11 +3,13 @@ import google from '@/assets/google_logo.png';
 import starDefault from '@/assets/star-default.png';
 import star from '@/assets/star.png';
 import cart from '@/assets/empty-cart.png';
+import boy from '@/assets/boy.png';
 export const facebookLogo = facebook;
 export const googleLogo = google;
 export const iconStart = star;
 export const iconStartDefault = starDefault;
 export const emptyCart = cart;
+export const avatarDefault = boy;
 
 export const formatCurrency = (currency: number) => {
   return new Intl.NumberFormat('de-DE').format(currency);
