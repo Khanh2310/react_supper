@@ -60,8 +60,8 @@ export const RouterConfig = () => {
           <Route element={<BasicLayout />}>
             <Route path="user" element={<UserLayout />}>
               <Route path="profile" element={<Profile />} />
-              <Route path="password" element={<ChangePassword />} />
-              <Route path="history" element={<HistoryPurchase />} />
+              <Route path="change-password" element={<ChangePassword />} />
+              <Route path="history-purchase" element={<HistoryPurchase />} />
             </Route>
             <Route path="/cart" element={<Cart />} />
           </Route>

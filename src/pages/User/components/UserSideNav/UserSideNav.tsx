@@ -16,7 +16,7 @@ export const UserSideNav = () => {
         </Link>
         <div className="flex-grow pl-4">
           <div className="mb-1 truncate font-semibold text-gray-600">
-            ddddddddddddddddddddd
+            Quoc_Bao
             <Link
               to="profile"
               className="flex items-center capitalize text-gray-500"
@@ -61,6 +61,51 @@ export const UserSideNav = () => {
               />
             </svg>
             Tài khoản của tôi
+          </div>
+        </Link>
+        <Link
+          to="change-password"
+          className="mt-3 flex items-center capitalize text-orange transition-colors"
+        >
+          <div className="mr-3 flex items-center text-xs capitalize">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="size-4"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
+              />
+            </svg>
+            Đổi mật khẩu
+          </div>
+        </Link>
+
+        <Link
+          to="history-purchase"
+          className="mt-3 flex items-center capitalize text-orange transition-colors"
+        >
+          <div className="mr-3 flex items-center text-xs capitalize">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="size-4"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"
+              />
+            </svg>
+            Lịch sử mua hàng
           </div>
         </Link>
       </div>
