@@ -26,7 +26,7 @@ export const Button = (props: IProps) => {
           />
         </svg>
       )}
-      <span className="ml-2">{children}</span>
+      <span>{children}</span>
     </button>
   );
 };

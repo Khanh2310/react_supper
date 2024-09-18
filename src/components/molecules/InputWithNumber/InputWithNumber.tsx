@@ -5,6 +5,7 @@ interface IProps extends InputHTMLAttributes<HTMLInputElement> {}
 export const InputWithNumber = forwardRef<HTMLInputElement, IProps>(
   function InputBase({ onChange, value = '', ...rest }, ref) {
     const [localValue, setLocalValue] = useState<string>(value as string);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
       if (/^\d+$/.test(value) || value === '') {
