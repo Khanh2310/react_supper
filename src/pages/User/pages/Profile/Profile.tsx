@@ -1,14 +1,15 @@
 import { Button } from '@/components/atoms/Button';
 import { Input } from '@/components/atoms/Input';
 import { InputWithNumber } from '@/components/molecules/InputWithNumber';
-import { getProfile, updateProfile } from '@/hook/useQueryProfile';
 import { profileSchema, profileSchemaInput } from '@/schema/profile/type';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { DateSelect } from '../../components/DateSelect';
+import { toast } from 'react-toastify';
 import { setProfile } from '@/hook/useQueryUser';
+import { getProfile, updateProfile } from '@/hook/useQueryProfile';
 
 type FormData = Pick<
   profileSchemaInput,
@@ -16,7 +17,7 @@ type FormData = Pick<
 >;
 
 export const Profile = () => {
-  const { data: profileData } = useQuery({
+  const { data: profileData, refetch } = useQuery({
     queryKey: ['profile'],
     queryFn: getProfile,
   });
@@ -71,13 +72,18 @@ export const Profile = () => {
     }
   }, [profile, setValue]);
 
+  const updateProfileMutation = useMutation({
+    mutationFn: updateProfile,
+  });
+
   const onSubmit = handleSubmit(async (data) => {
-    const res = await updateProfile({
+    const res = await updateProfileMutation.mutateAsync({
       ...data,
       date_of_birth: data.date_of_birth?.toISOString(),
     });
     setProfile(res.data.data);
-    setProfileTo;
+    refetch();
+    toast.success('Cập nhật thông tin thành công');
   });
 
   return (
@@ -89,7 +95,10 @@ export const Profile = () => {
         <div className="mt-1 text-sm text-gray-700">
           Quản lý thông tin hồ sở để bảo mật tài khoản
         </div>
-        <form className="mt-8 flex flex-col-reverse md:flex-row md:items-start">
+        <form
+          className="mt-8 flex flex-col-reverse md:flex-row md:items-start"
+          onSubmit={onSubmit}
+        >
           <div className="mt-6 flex-grow md:pr-12 md:mt-0">
             <div className="mt-6 flex flex-wrap">
               <div className="sm:w-[20%] truncate pt-2 text-right capitalize">
@@ -152,7 +161,17 @@ export const Profile = () => {
               </div>
             </div>
 
-            <DateSelect />
+            <Controller
+              control={control}
+              name="date_of_birth"
+              render={({ field }) => (
+                <DateSelect
+                  errorMessage={errors.date_of_birth?.message}
+                  onChange={field.onChange}
+                  value={field.value}
+                />
+              )}
+            />
 
             <div className="mt-7 flex flex-col flex-wrap sm:flex-row justify-end">
               <div className="sm:w[20%] truncate pt-3 text-right capitalize" />

@@ -3,7 +3,7 @@ import { ResponseApi } from '@/types';
 import { User } from '@/types/user/type';
 
 interface IUpdateProfile
-  extends Omit<User, '_id' | 'roles' | 'createdAt' | 'updatedAt'> {
+  extends Omit<User, '_id' | 'roles' | 'createdAt' | 'updatedAt' | 'email'> {
   password?: string;
   newPassword?: string;
 }
@@ -11,8 +11,8 @@ export const getProfile = () => {
   return axiosInstance.get<ResponseApi<User>>('me');
 };
 
-export const updateProfile = (body: ResponseApi<IUpdateProfile>) => {
-  return axiosInstance.put('user', body);
+export const updateProfile = (body: IUpdateProfile) => {
+  return axiosInstance.put<ResponseApi<User>>('user', body);
 };
 
 export const uploadAvatar = (body: IUpdateProfile) => {
