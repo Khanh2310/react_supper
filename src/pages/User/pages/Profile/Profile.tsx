@@ -77,6 +77,7 @@ export const Profile = () => {
       date_of_birth: data.date_of_birth?.toISOString(),
     });
     setProfile(res.data.data);
+    setProfileTo;
   });
 
   return (
