@@ -1,14 +1,14 @@
 import { Button } from '@/components/atoms/Button';
 import { Input } from '@/components/atoms/Input';
 import { InputWithNumber } from '@/components/molecules/InputWithNumber';
-import { getProfile } from '@/hook/useQueryProfile';
+import { getProfile, updateProfile } from '@/hook/useQueryProfile';
 import { profileSchema, profileSchemaInput } from '@/schema/profile/type';
-import { avatarDefault } from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { DateSelect } from '../../components/DateSelect';
+import { setProfile } from '@/hook/useQueryUser';
 
 type FormData = Pick<
   profileSchemaInput,
@@ -21,14 +21,29 @@ export const Profile = () => {
     queryFn: getProfile,
   });
   const profile = profileData?.data.data;
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleUpload = () => {
+    fileInputRef.current?.click();
+  };
+
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileFormLocal = event.target.files?.[0];
+    setFile(fileFormLocal);
+  };
+  const [file, setFile] = useState<File>();
+
+  const preview = useMemo(() => {
+    return file ? URL.createObjectURL(file) : '';
+  }, [file]);
 
   const {
     register,
     control,
     formState: { errors },
     handleSubmit,
-    setValue,
     watch,
+    setValue,
   } = useForm<FormData>({
     defaultValues: {
       name: '',
@@ -39,6 +54,7 @@ export const Profile = () => {
     },
     resolver: zodResolver(profileSchema),
   });
+  const avatar = watch('avatar');
 
   useEffect(() => {
     if (profile) {
@@ -54,6 +70,15 @@ export const Profile = () => {
       );
     }
   }, [profile, setValue]);
+
+  const onSubmit = handleSubmit(async (data) => {
+    const res = await updateProfile({
+      ...data,
+      date_of_birth: data.date_of_birth?.toISOString(),
+    });
+    setProfile(res.data.data);
+  });
+
   return (
     <div className="rounded-sm bg-white px-2 md:px-7 pb-10 md:pb-20 shadow">
       <div className="border-b border-gray-200 py-6">
@@ -145,16 +170,23 @@ export const Profile = () => {
             <div className="flex flex-col items-center">
               <div className="my-5 h-24 w-24">
                 <img
-                  src={avatarDefault}
+                  src={avatar || preview}
                   alt="avatar_default"
                   className="w-full h-full rounded-full object-cover"
                 />
               </div>
 
-              <input type="file" accept=".jpg,.jpeg,.png" className="hidden" />
+              <input
+                type="file"
+                accept=".jpg,.jpeg,.png"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={onFileChange}
+              />
               <button
                 className="flex h-10 items-center justify-end rounded-sm border bg-white px-6 text-sm text-gray-600 shadow-sm"
                 type="button"
+                onClick={handleUpload}
               >
                 Chọn Ảnh
               </button>
